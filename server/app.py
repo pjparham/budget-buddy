@@ -15,11 +15,16 @@ db.init_app(app)
 
 api = Api(app)
 
-class User(Resource):
+class Users(Resource):
     def get(self):
-        pass
+        name = request.json['name']
+        user = User.query.filter_by(name=name).first()
+        if not user:
+            return make_response(jsonify({'error': 'user not found'}), 404)
+        user_dict = user.to_dict()
+        return make_response(jsonify(user_dict), 200)
 
-
+api.add_resource(Users, '/users')
 
 
 if __name__ == '__main__':
