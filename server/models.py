@@ -1,11 +1,47 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
 
+metadata = MetaData(naming_convention={
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+})
 
+db = SQLAlchemy(metadata=metadata)
 
-db = SQLAlchemy()
+class BaseModel(db.Model, SerializerMixin):
+    __abstract__ = True
+    include_timestamps = False
 
-class User(db.Model, SerializerMixin):
+    def to_dict(self, visited=None):
+        if visited is None:
+            visited = set()
+
+        if self in visited:
+            return None
+
+        visited.add(self)
+
+        serialized = {}
+        for column in self.__table__.columns:
+            serialized[column.name] = getattr(self, column.name)
+
+        if self.include_timestamps:
+            serialized['created_at'] = self.created_at
+            serialized['updated_at'] = self.updated_at
+
+        for relationship in self.__mapper__.relationships:
+            related_obj = getattr(self, relationship.key)
+            if related_obj is None:
+                serialized[relationship.key] = None
+            elif isinstance(related_obj, list):
+                serialized[relationship.key] = [obj.to_dict(visited) for obj in related_obj]
+            else:
+                serialized[relationship.key] = related_obj.to_dict(visited)
+
+        visited.remove(self)
+        return serialized
+
+class User(BaseModel):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -17,7 +53,7 @@ class User(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<User {self.name}>'
 
-class Budget(db.Model, SerializerMixin):
+class Budget(BaseModel):
     __tablename__ = 'budgets'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -34,8 +70,7 @@ class Budget(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<Budget {self.title}>'
 
-
-class Income(db.Model, SerializerMixin):
+class Income(BaseModel):
     __tablename__ = 'incomes'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -46,11 +81,12 @@ class Income(db.Model, SerializerMixin):
 
     budget_id = db.Column(db.Integer, db.ForeignKey('budgets.id'))
 
+    include_timestamps = True
+
     def __repr__(self):
         return f'<Income {self.title}, Amount {self.amount}>'
 
-
-class Category(db.Model, SerializerMixin):
+class Category(BaseModel):
     __tablename__ = 'categories'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -66,7 +102,7 @@ class Category(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<Category {self.title}, amount {self.amount}>'
 
-class Expense(db.Model, SerializerMixin):
+class Expense(BaseModel):
     __tablename__ = 'expenses'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -77,7 +113,7 @@ class Expense(db.Model, SerializerMixin):
 
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 
+    include_timestamps = True
+
     def __repr__(self):
         return f'<Expense {self.title}, amount {self.amount}>'
-
-
