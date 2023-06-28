@@ -45,7 +45,7 @@ class User(BaseModel):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, unique=True, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     budgets = db.relationship('Budget', backref='user')
@@ -114,6 +114,19 @@ class Expense(BaseModel):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 
     include_timestamps = True
+
+    def to_dict(self, visited=None):
+        serialized = {
+            'id': self.id,
+            'title': self.title,
+            'amount': self.amount,
+            'category_id': self.category_id,
+            'budget_id': self.category.budget_id
+        }
+        if self.include_timestamps:
+            serialized['created_at'] = self.created_at
+            serialized['updated_at'] = self.updated_at
+        return serialized
 
     def __repr__(self):
         return f'<Expense {self.title}, amount {self.amount}>'
