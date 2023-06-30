@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
+from flask_bcrypt import generate_password_hash, check_password_hash
 
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
@@ -49,6 +50,24 @@ class User(BaseModel):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     budgets = db.relationship('Budget', backref='user')
+    password_hash = db.Column(db.String, nullable=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'password' in kwargs:
+            self.password_hash = self._generate_password_hash(kwargs['password'])
+
+    def _generate_password_hash(self, password):
+        return generate_password_hash(password).decode('utf-8')
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    # def to_dict(self, visited=None):
+    #     serialized = super().to_dict(visited)
+    #     serialized.pop('password_hash', None)
+    #     return serialized
+    
 
     def __repr__(self):
         return f'<User {self.name}>'

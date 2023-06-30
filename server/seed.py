@@ -10,6 +10,7 @@ with app.app_context():
     Expense.query.delete()
 
     parker = User(name='Parker')
+    parker.password_hash = parker._generate_password_hash('hello_world')
     db.session.add(parker)
 
     budget1 = Budget(title='July 2023', user=parker)
