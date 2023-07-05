@@ -1,8 +1,12 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, session
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_restful import Resource, Api
 from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 from models import db, User, Budget, Income, Category, Expense
 
@@ -16,6 +20,7 @@ db.init_app(app)
 bcrypt = Bcrypt(app)
 
 api = Api(app)
+app.secret_key = os.environ.get('SECRET_KEY')
 
 class Users(Resource):
     def get(self):
@@ -46,6 +51,32 @@ class Users(Resource):
 
 
 api.add_resource(Users, '/users')
+
+class Login(Resource):
+    def post(self):
+        request_json = request.get_json()
+        username = request_json.get('name')
+        password = request_json.get('password')
+
+        user = User.query.filter(User.name == username).first()
+
+        if user:
+            if user.check_password(password):
+                session['user_id'] = user.id
+                return make_response(jsonify(user.to_dict()), 200)
+            
+        return {'error': '401 Unauthorized'}, 401
+
+api.add_resource(Login, '/login')
+
+class CheckSession(Resource):
+    def get(self):
+        if session.get('user_id'):
+            user = User.query.filter(User.id == session['user_id']).first()
+            return make_response(jsonify(user.to_dict()), 200)
+        return {'error': '401 Unauthroized'}, 401
+    
+api.add_resource(CheckSession, '/check_session')
 
 
 if __name__ == '__main__':

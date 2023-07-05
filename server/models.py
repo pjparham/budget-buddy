@@ -63,11 +63,6 @@ class User(BaseModel):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     
-    # def to_dict(self, visited=None):
-    #     serialized = super().to_dict(visited)
-    #     serialized.pop('password_hash', None)
-    #     return serialized
-    
 
     def __repr__(self):
         return f'<User {self.name}>'
