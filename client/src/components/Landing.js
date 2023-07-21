@@ -12,8 +12,22 @@ import {
     Icon,
   } from '@chakra-ui/react';
   import { FcMoneyTransfer, FcCalculator } from 'react-icons/fc';
+  import { useState } from 'react';
 
   export default function JoinBudgetBuddy() {
+    const [user, setUser] = useState({
+      "name": "",
+      "email": "",
+      "password": ""
+    })
+
+    function handleChange(e){
+      setUser({
+        ...user,
+        [e.target.name]: e.target.value,
+      })
+    }
+
 
     return (
       <Box position={'relative'}>
@@ -100,7 +114,10 @@ import {
                   placeholder="Name"
                   bg={'gray.100'}
                   border={0}
-                  color={'gray.500'}
+                  color={'gray.800'}
+                  name='name'
+                  value={user.name}
+                  onChange={handleChange}
                   _placeholder={{
                     color: 'gray.500',
                   }}
@@ -109,16 +126,23 @@ import {
                   placeholder="firstname@lastname.io"
                   bg={'gray.100'}
                   border={0}
-                  color={'gray.500'}
+                  color={'gray.800'}
+                  name='email'
+                  value={user.email}
+                  onChange={handleChange}
                   _placeholder={{
                     color: 'gray.500',
                   }}
+                  
                 />
                 <Input
                   placeholder="Password"
                   bg={'gray.100'}
                   border={0}
-                  color={'gray.500'}
+                  color={'gray.800'}
+                  name='password'
+                  value={user.password}
+                  onChange={handleChange}
                   _placeholder={{
                     color: 'gray.500',
                   }}
