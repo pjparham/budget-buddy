@@ -63,30 +63,6 @@ import {
               </Text>{' '}
             </Heading>
             <Stack direction={'column'} spacing={5} align={'center'}>
-              {/* <AvatarGroup>
-                {avatars.map((avatar) => (
-                  <Avatar
-                    key={avatar.name}
-                    name={avatar.name}
-                    src={avatar.url}
-                    size={avatarIMG}
-                    position={'relative'}
-                    zIndex={2}
-                    _before={{
-                      content: '""',
-                      width: 'full',
-                      height: 'full',
-                      rounded: 'full',
-                      transform: 'scale(1.125)',
-                      bgGradient: 'linear(to-bl, red.400,pink.400)',
-                      position: 'absolute',
-                      zIndex: -1,
-                      top: 0,
-                      left: 0,
-                    }}
-                  />
-                ))}
-              </AvatarGroup> */}
 
                 <FcMoneyTransfer size={'5em'}/>
                 <FcCalculator size={'5em'}/>
