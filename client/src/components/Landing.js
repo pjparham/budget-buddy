@@ -60,7 +60,7 @@ import {
                   height: 'full',
                   rounded: 'full',
                   transform: 'scale(1.125)',
-                  bgGradient: 'linear(to-bl, orange.400,yellow.400)',
+                  bgGradient: 'linear(to-bl, orange.400,green.400)',
                   position: 'absolute',
                   zIndex: -1,
                   top: 0,
