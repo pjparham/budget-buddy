@@ -35,6 +35,7 @@ class Users(Resource):
         data = request.get_json()
         name = data.get('name')
         password = data.get('password')
+        email = data.get('email')
 
         if not name or not password:
             return make_response(jsonify({'error': 'name and password are required fields'}), 400)
@@ -43,7 +44,7 @@ class Users(Resource):
         if existing_user:
             return make_response(jsonify({'error': 'user already exists'}), 409)
 
-        new_user = User(name=name, password=password)
+        new_user = User(name=name, password=password, email=email)
         db.session.add(new_user)
         db.session.commit()
 
