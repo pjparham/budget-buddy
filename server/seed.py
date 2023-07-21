@@ -9,7 +9,7 @@ with app.app_context():
     Category.query.delete()
     Expense.query.delete()
 
-    parker = User(name='Parker')
+    parker = User(name='Parker', email='parkerparham@yahoo.com')
     parker.password_hash = parker._generate_password_hash('hello_world')
     db.session.add(parker)
 
