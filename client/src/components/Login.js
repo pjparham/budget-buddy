@@ -9,6 +9,7 @@ import {
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { BsPersonHearts } from 'react-icons/bs';
 
 export default function Login({handleChange, userForm, setIsLogin, setUser}) {
     const navigate = useNavigate()
@@ -37,9 +38,9 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
 
   return (
     <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}>
+    initial={{ opacity: 0, x: 100 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: -100 }}>
     <Stack
     bg={'gray.50'}
     rounded={'xl'}
@@ -97,6 +98,7 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
         />
       </Stack>
       <Button
+        leftIcon={<BsPersonHearts />}
         fontFamily={'heading'}
         mt={8}
         w={'full'}
@@ -107,7 +109,7 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
           bgGradient: 'linear(to-r, green.400,green.800)',
           boxShadow: 'xl',
         }}>
-        Submit
+        Login
       </Button>
       Don't have an account? Sign up <Text as="span" cursor="pointer" fontWeight="600" onClick={handleChangeForm}>here</Text>
     </Box>
