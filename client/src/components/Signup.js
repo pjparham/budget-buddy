@@ -7,6 +7,7 @@ import {
     Button,
   } from '@chakra-ui/react';
 import React from 'react'
+import { BsPersonHeart } from 'react-icons/bs';
 import { motion } from 'framer-motion';
 
 export default function Signup({handleChange, userForm, setIsLogin}) {
@@ -17,9 +18,10 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
 
   return (
     <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}>
+    initial={{ opacity: 0, x: 100 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: -100 }}
+    >
     <Stack
     bg={'gray.50'}
     // bg={'red'}
@@ -87,6 +89,7 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
         />
       </Stack>
       <Button
+        leftIcon={<BsPersonHeart />}
         fontFamily={'heading'}
         mt={8}
         w={'full'}
@@ -96,7 +99,7 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
           bgGradient: 'linear(to-r, green.400,green.800)',
           boxShadow: 'xl',
         }}>
-        Submit
+        Create
       </Button>
       Already have an account? Log in <Text as="span" cursor="pointer" fontWeight="600" onClick={handleChangeForm}>here</Text>
     </Box>
