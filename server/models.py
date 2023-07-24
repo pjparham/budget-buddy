@@ -11,14 +11,14 @@ db = SQLAlchemy(metadata=metadata)
 
 class BaseModel(db.Model, SerializerMixin):
     __abstract__ = True
-    include_timestamps = False
+    # include_timestamps = False
 
     def to_dict(self, visited=None):
         if visited is None:
             visited = set()
 
         if self in visited:
-            return None
+            return {}
 
         visited.add(self)
 
@@ -26,9 +26,6 @@ class BaseModel(db.Model, SerializerMixin):
         for column in self.__table__.columns:
             serialized[column.name] = getattr(self, column.name)
 
-        if self.include_timestamps:
-            serialized['created_at'] = self.created_at
-            serialized['updated_at'] = self.updated_at
 
         for relationship in self.__mapper__.relationships:
             related_obj = getattr(self, relationship.key)
@@ -63,6 +60,11 @@ class User(BaseModel):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def to_dict(self, visited=None):
+        serialized = super().to_dict(visited)
+        serialized.pop('password_hash', None)
+        return serialized
     
 
     def __repr__(self):
