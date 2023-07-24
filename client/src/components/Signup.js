@@ -8,8 +8,8 @@ import {
   } from '@chakra-ui/react';
 import React from 'react'
 
-export default function Signup({handleChange, user, setIsLogin}) {
-    
+export default function Signup({handleChange, userForm, setIsLogin}) {
+
     function handleChangeForm(){
         setIsLogin(true)
     }
@@ -48,7 +48,7 @@ export default function Signup({handleChange, user, setIsLogin}) {
           border={0}
           color={'gray.800'}
           name='name'
-          value={user.name}
+          value={userForm.name}
           onChange={handleChange}
           _placeholder={{
             color: 'gray.500',
@@ -60,7 +60,7 @@ export default function Signup({handleChange, user, setIsLogin}) {
           border={0}
           color={'gray.800'}
           name='email'
-          value={user.email}
+          value={userForm.email}
           onChange={handleChange}
           _placeholder={{
             color: 'gray.500',
@@ -73,7 +73,7 @@ export default function Signup({handleChange, user, setIsLogin}) {
           border={0}
           color={'gray.800'}
           name='password'
-          value={user.password}
+          value={userForm.password}
           onChange={handleChange}
           _placeholder={{
             color: 'gray.500',
@@ -92,7 +92,7 @@ export default function Signup({handleChange, user, setIsLogin}) {
         }}>
         Submit
       </Button>
-      Already have an account? Log in <span onClick={handleChangeForm}>here</span>
+      Already have an account? Log in <Text as="span" cursor="pointer" fontWeight="600" onClick={handleChangeForm}>here</Text>
     </Box>
     form
   </Stack>

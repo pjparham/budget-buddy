@@ -56,10 +56,10 @@ api.add_resource(Users, '/users')
 class Login(Resource):
     def post(self):
         request_json = request.get_json()
-        username = request_json.get('name')
+        email = request_json.get('email')
         password = request_json.get('password')
 
-        user = User.query.filter(User.name == username).first()
+        user = User.query.filter(User.email == email).first()
 
         if user:
             if user.check_password(password):
@@ -70,6 +70,13 @@ class Login(Resource):
 
 api.add_resource(Login, '/login')
 
+class Logout(Resource):
+    def delete(self):
+        session['user_id'] = None
+        return make_response({}, 204)
+
+api.add_resource(Logout, '/logout')
+
 class CheckSession(Resource):
     def get(self):
         if session.get('user_id'):
@@ -78,6 +85,13 @@ class CheckSession(Resource):
         return {'error': '401 Unauthroized'}, 401
     
 api.add_resource(CheckSession, '/check_session')
+
+class Testing(Resource):
+    def get(self):
+        user = User.query.first()
+        return make_response(jsonify(user.to_dict()), 200)
+    
+api.add_resource(Testing, '/testing')
 
 
 if __name__ == '__main__':

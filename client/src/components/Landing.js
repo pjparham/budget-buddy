@@ -16,17 +16,17 @@ import {
   import Signup from './Signup';
   import Login from './Login';
 
-  export default function Landing() {
+  export default function Landing({ setUser }) {
     const [isLogin, setIsLogin] = useState(false)
-    const [user, setUser] = useState({
+    const [userForm, setUserForm] = useState({
       "name": "",
       "email": "",
       "password": ""
     })
 
     function handleChange(e){
-      setUser({
-        ...user,
+      setUserForm({
+        ...userForm,
         [e.target.name]: e.target.value,
       })
     }
@@ -88,8 +88,8 @@ import {
             </Stack>
           </Stack>
           {isLogin ? 
-          <Login user={user} handleChange={handleChange} setIsLogin={setIsLogin}/> :
-          <Signup user={user} handleChange={handleChange} setIsLogin={setIsLogin}/>
+          <Login userForm={userForm} setUser={setUser} handleChange={handleChange} setIsLogin={setIsLogin}/> :
+          <Signup userForm={userForm} handleChange={handleChange} setIsLogin={setIsLogin}/>
           }
         </Container>
         <Blur

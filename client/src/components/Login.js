@@ -7,13 +7,33 @@ import {
     Button,
   } from '@chakra-ui/react';
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
-export default function Login({handleChange, user, setIsLogin}) {
-
+export default function Login({handleChange, userForm, setIsLogin, setUser}) {
+    const navigate = useNavigate()
     function handleChangeForm(){
         setIsLogin(false)
     }
-    
+
+
+    function handleLogin(e){
+        e.preventDefault()
+        fetch(`/login`, {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(userForm)
+        })
+        .then(res => {
+            if (res.ok){
+                res.json().then(setUser)
+                console.log('success')
+                return navigate("/login-test")
+            } else {
+                alert("Something went wrong")
+            }
+        })
+    }
+
   return (
     <Stack
     bg={'gray.50'}
@@ -42,25 +62,13 @@ export default function Login({handleChange, user, setIsLogin}) {
     </Stack>
     <Box as={'form'} mt={10}>
       <Stack spacing={4}>
-        {/* <Input
-          placeholder="Name"
-          bg={'gray.100'}
-          border={0}
-          color={'gray.800'}
-          name='name'
-          value={user.name}
-          onChange={handleChange}
-          _placeholder={{
-            color: 'gray.500',
-          }}
-        /> */}
         <Input
           placeholder="firstname@lastname.io"
           bg={'gray.100'}
           border={0}
           color={'gray.800'}
           name='email'
-          value={user.email}
+          value={userForm.email}
           onChange={handleChange}
           _placeholder={{
             color: 'gray.500',
@@ -73,7 +81,7 @@ export default function Login({handleChange, user, setIsLogin}) {
           border={0}
           color={'gray.800'}
           name='password'
-          value={user.password}
+          value={userForm.password}
           onChange={handleChange}
           _placeholder={{
             color: 'gray.500',
@@ -86,13 +94,14 @@ export default function Login({handleChange, user, setIsLogin}) {
         w={'full'}
         bgGradient="linear(to-r, green.400,green.700)"
         color={'white'}
+        onClick={handleLogin}
         _hover={{
           bgGradient: 'linear(to-r, green.400,green.800)',
           boxShadow: 'xl',
         }}>
         Submit
       </Button>
-      Don't have an account? Sign up <span onClick={handleChangeForm}>here</span>
+      Don't have an account? Sign up <Text as="span" cursor="pointer" fontWeight="600" onClick={handleChangeForm}>here</Text>
     </Box>
     form
   </Stack>
