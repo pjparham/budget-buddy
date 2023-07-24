@@ -1,33 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Landing from './components/Landing.js';
-import LoginTest from './components/LoginTest.js';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
+import AnimatedRoutes from './components/AnimatedRoutes.js';
 
 function App() {
-  const [user, setUser] = useState([])
   
-
-  useEffect(() => {
-    fetch("/check_session")
-    .then((r) => r.json())
-    .then(res => {
-      if (res.ok){
-        console.log('res', res)
-        res.json().then(setUser)
-      } else{
-        console.log(res)
-      }
-    })    
-  }, [])
-
 
   return (
     <div className="App">
-      <Routes>
-        <Route exact path='/' element={<Landing setUser={setUser}/>}/>
-        <Route exact path='/login-test' element={<LoginTest setUser={setUser}/>}/>
-      </Routes>
+      <Router>
+        <AnimatedRoutes />
+      </Router>
     </div>
   );
 }
