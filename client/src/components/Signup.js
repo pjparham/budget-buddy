@@ -7,6 +7,7 @@ import {
     Button,
   } from '@chakra-ui/react';
 import React from 'react'
+import { motion } from 'framer-motion';
 
 export default function Signup({handleChange, userForm, setIsLogin}) {
 
@@ -15,13 +16,18 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
     }
 
   return (
+    <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}>
     <Stack
     bg={'gray.50'}
     // bg={'red'}
     rounded={'xl'}
     p={{ base: 4, sm: 6, md: 8 }}
     spacing={{ base: 8 }}
-    maxW={{ lg: 'lg' }}>
+    maxW={{ lg: 'lg' }}
+    >
     <Stack spacing={4}>
       <Heading
         color={'gray.800'}
@@ -96,5 +102,6 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
     </Box>
     form
   </Stack>
+  </motion.div>
   )
 }
