@@ -5,12 +5,15 @@ import {
     Text,
     Input,
     Button,
+    InputRightElement,
+    InputGroup,
   } from '@chakra-ui/react';
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion';
 import { BsPersonHeart } from 'react-icons/bs';
 
 export default function Signup({handleChange, userForm, setIsLogin}) {
+    const [show, setShow] = useState(false)
 
     function handleChangeForm(){
         setIsLogin(true)
@@ -47,7 +50,7 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
       With a focus on simplicity and convenience, the app enables users to track their income, expenses, and savings in real-time.
       </Text>
     </Stack>
-    <Box as={'form'} mt={10}>
+    <Box mt={10}>
       <Stack spacing={4}>
         <Input
           placeholder="Name"
@@ -74,8 +77,10 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
           }}
           
         />
+        <InputGroup>
         <Input
           placeholder="Password"
+          type={show ? "text" : "password"}
           bg={'gray.100'}
           border={0}
           color={'gray.800'}
@@ -86,6 +91,12 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
             color: 'gray.500',
           }}
         />
+        <InputRightElement width='4.5rem'>
+          <Button h='1.75rem' size='sm' onClick={() => setShow(!show)}>
+            {show ? 'Hide' : 'Show'}
+          </Button>
+        </InputRightElement>
+        </InputGroup>
       </Stack>
       <Button
         leftIcon={<BsPersonHeart />}
