@@ -43,7 +43,7 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
         </Text>
       </Heading>
       <Text color={'gray.500'} fontSize={{ base: 'sm', sm: 'md' }}>
-      Budget Buddy is a user-friendly mobile application designed to help individuals manage their personal finances effectively. 
+      Budget Buddy is a user-friendly application designed to help individuals manage their personal finances effectively. 
       With a focus on simplicity and convenience, the app enables users to track their income, expenses, and savings in real-time.
       </Text>
     </Stack>

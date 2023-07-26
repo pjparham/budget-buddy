@@ -5,6 +5,7 @@ import {
     Text,
     Input,
     Button,
+    useToast,
   } from '@chakra-ui/react';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ import { motion } from 'framer-motion';
 import { BsPersonHearts } from 'react-icons/bs';
 
 export default function Login({handleChange, userForm, setIsLogin, setUser}) {
+    const toast = useToast()
     const navigate = useNavigate()
     function handleChangeForm(){
         setIsLogin(false)
@@ -31,7 +33,12 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
                 console.log('success')
                 return navigate("/login-test")
             } else {
-                alert("Something went wrong")
+              toast({
+                title: `${res.status} error`,
+                status: "error",
+                position: "top",
+                isClosable: true,
+              })
             }
         })
     }
@@ -65,13 +72,14 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
         </Text>
       </Heading>
       <Text color={'gray.500'} fontSize={{ base: 'sm', sm: 'md' }}>
-      Budget Buddy is a user-friendly mobile application designed to help individuals manage their personal finances effectively. 
+      Budget Buddy is a user-friendly application designed to help individuals manage their personal finances effectively. 
       With a focus on simplicity and convenience, the app enables users to track their income, expenses, and savings in real-time.
       </Text>
     </Stack>
     <Box as={'form'} mt={10}>
       <Stack spacing={4}>
         <Input
+          isRequired
           placeholder="firstname@lastname.io"
           bg={'gray.100'}
           border={0}
@@ -85,7 +93,9 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
           
         />
         <Input
+          isRequired
           placeholder="Password"
+          type="password"
           bg={'gray.100'}
           border={0}
           color={'gray.800'}
