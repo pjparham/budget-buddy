@@ -6,13 +6,16 @@ import {
     Input,
     Button,
     useToast,
+    InputGroup,
+    InputRightElement,
   } from '@chakra-ui/react';
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BsPersonHearts } from 'react-icons/bs';
 
 export default function Login({handleChange, userForm, setIsLogin, setUser}) {
+    const [show, setShow] = useState(false)
     const toast = useToast()
     const navigate = useNavigate()
     function handleChangeForm(){
@@ -92,20 +95,27 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
           }}
           
         />
-        <Input
-          isRequired
-          placeholder="Password"
-          type="password"
-          bg={'gray.100'}
-          border={0}
-          color={'gray.800'}
-          name='password'
-          value={userForm.password}
-          onChange={handleChange}
-          _placeholder={{
-            color: 'gray.500',
-          }}
-        />
+        <InputGroup>
+          <Input
+            isRequired
+            placeholder="Password"
+            type={show ? "text" : "password"}
+            bg={'gray.100'}
+            border={0}
+            color={'gray.800'}
+            name='password'
+            value={userForm.password}
+            onChange={handleChange}
+            _placeholder={{
+              color: 'gray.500',
+            }}
+          />
+          <InputRightElement width="4.5rem">
+            <Button h="1.75rem" size="sm" onClick={() => setShow(!show)}>
+              {show ? "Hide" : "Show"}
+            </Button>
+          </InputRightElement>
+        </InputGroup>
       </Stack>
       <Button
         leftIcon={<BsPersonHearts />}
