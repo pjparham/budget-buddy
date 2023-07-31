@@ -7,16 +7,43 @@ import {
     Button,
     InputRightElement,
     InputGroup,
+    useToast
   } from '@chakra-ui/react';
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BsPersonHeart } from 'react-icons/bs';
 
-export default function Signup({handleChange, userForm, setIsLogin}) {
+export default function Signup({handleChange, userForm, setIsLogin, setUser}) {
     const [show, setShow] = useState(false)
+    const navigate = useNavigate()
+    const toast = useToast()
 
     function handleChangeForm(){
         setIsLogin(true)
+    }
+
+    function handleSignup(e){
+      e.preventDefault() 
+      fetch(`/users`, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(userForm)
+      })
+      .then(res => {
+      if (res.ok){
+        res.json().then(setUser)
+        console.log('success')
+        return navigate("/login-test")
+       } else {
+          toast({
+            title: `${res.status} ${res.statusText} error`,
+            status: "error",
+            position: "top",
+            isClosable: true,
+          })
+        }
+      })
     }
 
   return (
@@ -50,7 +77,7 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
       With a focus on simplicity and convenience, the app enables users to track their income, expenses, and savings in real-time.
       </Text>
     </Stack>
-    <Box mt={10}>
+    <Box as="form" mt={10}>
       <Stack spacing={4}>
         <Input
           placeholder="Name"
@@ -99,6 +126,7 @@ export default function Signup({handleChange, userForm, setIsLogin}) {
         </InputGroup>
       </Stack>
       <Button
+        onClick={handleSignup}
         leftIcon={<BsPersonHeart />}
         fontFamily={'heading'}
         mt={8}

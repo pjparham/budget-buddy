@@ -5,8 +5,6 @@ import {
     Heading,
     Text,
     Container,
-    Input,
-    Button,
     SimpleGrid,
     useBreakpointValue,
     Icon,
@@ -89,7 +87,7 @@ import {
           </Stack>
           {isLogin ? 
           <Login userForm={userForm} setUser={setUser} handleChange={handleChange} setIsLogin={setIsLogin}/> :
-          <Signup userForm={userForm} handleChange={handleChange} setIsLogin={setIsLogin}/>
+          <Signup userForm={userForm} handleChange={handleChange} setIsLogin={setIsLogin} setUser={setUser}/>
           }
         </Container>
         <Blur
