@@ -37,10 +37,10 @@ class Users(Resource):
         password = data.get('password')
         email = data.get('email')
 
-        if not name or not password:
-            return make_response(jsonify({'error': 'name and password are required fields'}), 400)
+        if not name or not password or not email:
+            return make_response(jsonify({'error': 'name, email, and password are required fields'}), 400)
 
-        existing_user = User.query.filter_by(name=name).first()
+        existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             return make_response(jsonify({'error': 'user already exists'}), 409)
 
