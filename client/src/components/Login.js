@@ -35,12 +35,14 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
                 console.log('success')
                 return navigate("/login-test")
             } else {
+              res.json().then(e =>
               toast({
-                title: `${res.status} error`,
+                title: `${res.status} ${e.error}`,
                 status: "error",
                 position: "top",
                 isClosable: true,
               })
+              )
             }
         })
     }

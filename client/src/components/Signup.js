@@ -36,12 +36,14 @@ export default function Signup({handleChange, userForm, setIsLogin, setUser}) {
         console.log('success')
         return navigate("/login-test")
        } else {
+        res.json().then(e =>
           toast({
-            title: `${res.status} ${res.statusText} error`,
+            title: `${res.status} ${e.error} error`,
             status: "error",
             position: "top",
             isClosable: true,
           })
+        )
         }
       })
     }
