@@ -22,7 +22,6 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
         setIsLogin(false)
     }
 
-
     function handleLogin(e){
         e.preventDefault()
         fetch(`/login`, {

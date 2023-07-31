@@ -7,8 +7,7 @@ import { AnimatePresence } from 'framer-motion'
 function AnimatedRoutes() {
     const location = useLocation()
     const [user, setUser] = useState([])
-  
-
+  console.log(user)
   useEffect(() => {
     fetch("/check_session")
     .then((r) => r.json())
