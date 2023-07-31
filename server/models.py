@@ -43,7 +43,7 @@ class User(BaseModel):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, nullable=False)
+    name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
