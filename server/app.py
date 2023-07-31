@@ -38,11 +38,11 @@ class Users(Resource):
         email = data.get('email')
 
         if not name or not password or not email:
-            return make_response(jsonify({'error': 'name, email, and password are required fields'}), 400)
+            return make_response(jsonify({'error': 'Name, Email, and Password are required fields'}), 400)
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            return make_response(jsonify({'error': 'user already exists'}), 409)
+            return make_response(jsonify({'error': 'User Already Exists'}), 409)
 
         new_user = User(name=name, email=email)
         new_user.password_hash = new_user._generate_password_hash(password)
@@ -67,7 +67,7 @@ class Login(Resource):
                 session['user_id'] = user.id
                 return make_response(jsonify(user.to_dict()), 200)
             
-        return {'error': '401 Unauthorized'}, 401
+        return {'error': 'Invalid Username or Password'}, 401
 
 api.add_resource(Login, '/login')
 
