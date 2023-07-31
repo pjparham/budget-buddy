@@ -48,7 +48,7 @@ class Users(Resource):
         db.session.add(new_user)
         db.session.commit()
 
-        return make_response(jsonify({'message': 'user created successfully'}), 201)
+        return make_response(jsonify(new_user.to_dict()), 201)
 
 
 api.add_resource(Users, '/users')
