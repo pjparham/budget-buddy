@@ -44,7 +44,8 @@ class Users(Resource):
         if existing_user:
             return make_response(jsonify({'error': 'user already exists'}), 409)
 
-        new_user = User(name=name, password=password, email=email)
+        new_user = User(name=name, email=email)
+        new_user.password_hash = new_user._generate_password_hash(password)
         db.session.add(new_user)
         db.session.commit()
 
