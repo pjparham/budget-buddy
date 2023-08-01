@@ -54,6 +54,43 @@ class Users(Resource):
 
 api.add_resource(Users, '/users')
 
+class Budgets(Resource):
+    def post(self):
+        data = request.get_json()
+        title = data.get('title')
+        if session.get('user_id'):
+            user = User.query.filter(User.id == session['user_id']).first()
+            new_budget = Budget(title=title, user=user)
+            db.session.add(new_budget)
+            db.session.commit()
+            return make_response(jsonify(new_budget.to_dict()), 201)
+        else:
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+    def delete(self, budget_id):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        budget = Budget.query.get(budget_id)
+        if not budget:
+            return make_response(jsonify({'error': 'Budget not found'}), 404)
+        
+        # check if budget belongs to logged in user
+        user = User.query.filter(User.id == session['user_id']).first()
+        if budget.user != user:
+            return make_response(jsonify({'error': 'Not authorized to delete this budget'}), 401)
+        
+        try:
+            db.session.delete(budget)
+            db.session.commit()
+            return make_response(jsonify({'message': 'Budget deleted successfully'}), 200)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while deleting the budget'}), 500)
+        
+api.add_resource(Budgets, '/budgets', '/budgets/<int:budget_id>')
+
 class Login(Resource):
     def post(self):
         request_json = request.get_json()
@@ -90,7 +127,9 @@ api.add_resource(CheckSession, '/check_session')
 class Testing(Resource):
     def get(self):
         user = User.query.first()
+        print(session['user_id'])
         return make_response(jsonify(user.to_dict()), 200)
+    
     
 api.add_resource(Testing, '/testing')
 
