@@ -149,7 +149,6 @@ export default function Signup({handleChange, userForm, setIsLogin, setUser}) {
      <Text color={'gray.600'}>Already have an account? Log in</Text> 
      <Text as="span" cursor="pointer" fontWeight="600" onClick={handleChangeForm} color={'gray.500'}>here</Text>
     </Box>
-    form
   </Stack>
   </motion.div>
   )
