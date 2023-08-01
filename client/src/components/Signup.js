@@ -34,7 +34,7 @@ export default function Signup({handleChange, userForm, setIsLogin, setUser}) {
       if (res.ok){
         res.json().then(setUser)
         console.log('success')
-        return navigate("/login-test")
+        return navigate("/home")
        } else {
         res.json().then(e =>
           toast({
@@ -121,7 +121,11 @@ export default function Signup({handleChange, userForm, setIsLogin, setUser}) {
           }}
         />
         <InputRightElement width='4.5rem'>
-          <Button h='1.75rem' size='sm' onClick={() => setShow(!show)}>
+          <Button h='1.75rem' size='sm'
+          bg={'black'} 
+          color={'white'}
+          _hover={{bg: 'gray.500'}} 
+          onClick={() => setShow(!show)}>
             {show ? 'Hide' : 'Show'}
           </Button>
         </InputRightElement>
@@ -129,6 +133,7 @@ export default function Signup({handleChange, userForm, setIsLogin, setUser}) {
       </Stack>
       <Button
         onClick={handleSignup}
+        type='submit'
         leftIcon={<BsPersonHeart />}
         fontFamily={'heading'}
         mt={8}
@@ -141,7 +146,8 @@ export default function Signup({handleChange, userForm, setIsLogin, setUser}) {
         }}>
         Create
       </Button>
-      Already have an account? Log in <Text as="span" cursor="pointer" fontWeight="600" onClick={handleChangeForm}>here</Text>
+     <Text color={'gray.600'}>Already have an account? Log in</Text> 
+     <Text as="span" cursor="pointer" fontWeight="600" onClick={handleChangeForm} color={'gray.500'}>here</Text>
     </Box>
     form
   </Stack>

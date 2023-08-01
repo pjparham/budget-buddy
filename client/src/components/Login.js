@@ -33,7 +33,7 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
             if (res.ok){
                 res.json().then(setUser)
                 console.log('success')
-                return navigate("/login-test")
+                return navigate("/home")
             } else {
               res.json().then(e =>
               toast({
@@ -80,7 +80,8 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
       With a focus on simplicity and convenience, the app enables users to track their income, expenses, and savings in real-time.
       </Text>
     </Stack>
-    <Box as={'form'} mt={10}>
+    <Box mt={10}>
+      <form>
       <Stack spacing={4}>
         <Input
           isRequired
@@ -112,27 +113,33 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
             }}
           />
           <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={() => setShow(!show)}>
+            <Button h="1.75rem" size="sm" bg={'black'} 
+                    color={'white'}
+                    _hover={{bg: 'gray.500'}}
+                    onClick={() => setShow(!show)}>
               {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
       </Stack>
       <Button
+        onClick={handleLogin}
+        type='submit'
         leftIcon={<BsPersonHearts />}
         fontFamily={'heading'}
         mt={8}
         w={'full'}
         bgGradient="linear(to-r, green.400,green.700)"
         color={'white'}
-        onClick={handleLogin}
         _hover={{
           bgGradient: 'linear(to-r, green.400,green.800)',
           boxShadow: 'xl',
         }}>
         Login
       </Button>
-      Don't have an account? Sign up <Text as="span" cursor="pointer" fontWeight="600" onClick={handleChangeForm}>here</Text>
+      <Text color={'gray.600'}>Don't have an account? Sign up</Text> 
+      <Text as="span" cursor="pointer" fontWeight="600" onClick={handleChangeForm} color={'gray.500'}>here</Text>
+      </form>
     </Box>
     form
   </Stack>
