@@ -91,6 +91,39 @@ class Budgets(Resource):
         
 api.add_resource(Budgets, '/budgets', '/budgets/<int:budget_id>')
 
+class Incomes(Resource):
+    def post(self):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        data = request.get_json()
+        title = data.get('title')
+        amount = data.get('amount')
+        budget_id = data.get('budget_id')
+
+        budget = Budget.query.get(budget_id)
+        if not budget:
+            return make_response(jsonify({'error': 'Budget not found'}), 404)
+        
+        
+        try:
+            with db.session.begin_nested():  # starts a nested transaction
+                new_income = Income(title=title, amount=amount, budget=budget)
+                db.session.add(new_income)
+                db.session.flush()  # Flush the session to get the new_income.id
+                budget.remaining_amount += amount
+
+            db.session.commit()  # Commit the nested transaction
+
+            return make_response(jsonify(new_income.to_dict()), 201)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while adding this income'}), 500)
+
+api.add_resource(Incomes, '/incomes')
+
+
 class Login(Resource):
     def post(self):
         request_json = request.get_json()
