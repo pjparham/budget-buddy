@@ -107,21 +107,43 @@ class Incomes(Resource):
         
         
         try:
-            with db.session.begin_nested():  # starts a nested transaction
+            with db.session.begin_nested():  
                 new_income = Income(title=title, amount=amount, budget=budget)
                 db.session.add(new_income)
                 db.session.flush()  # Flush the session to get the new_income.id
                 budget.remaining_amount += amount
 
-            db.session.commit()  # Commit the nested transaction
+            db.session.commit()  
 
             return make_response(jsonify(new_income.to_dict()), 201)
 
         except Exception as e:
             db.session.rollback()
             return make_response(jsonify({'error': 'An error occurred while adding this income'}), 500)
+        
+    def delete(self, income_id):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        income = Income.query.get(income_id)
+        if not income:
+            return make_response(jsonify({'error': 'Income not found'}), 404)
+        
+        try:
+            with db.session.begin_nested():  
+                budget = income.budget
+                budget.remaining_amount -= income.amount
+                db.session.delete(income)
 
-api.add_resource(Incomes, '/incomes')
+            db.session.commit() 
+
+            return make_response(jsonify({'message': 'Income deleted successfully'}), 200)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while deleting the income'}), 500)
+
+api.add_resource(Incomes, '/incomes', '/incomes/<int:income_id>')
 
 
 class Login(Resource):
