@@ -21,12 +21,26 @@ import {
   useColorModeValue,
   createIcon,
 } from '@chakra-ui/react'
+import { useState } from 'react'
 import Navbar from './Navbar'
 import { BiMoneyWithdraw } from 'react-icons/bi'
 import { motion } from 'framer-motion'
 
 export default function CallToActionWithAnnotation({ setUser, user }) {
+    const [budgets, setBudgets] = useState([])
+    const [input, setInput] = useState('')
     const { isOpen, onToggle } = useDisclosure()
+
+    function handleCreateBudget(e){
+        e.preventDefault()
+        setBudgets([...budgets, input])
+        console.log(`created ${input}`)
+        // fetch(`/users/${user.id}/budgets`, {
+        //     method: "POST",
+        //     headers: {'Content-Type': 'application/json'},
+        //     body: JSON.stringify(user)
+        // })
+    }
 
   return (
     <>
@@ -83,28 +97,32 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
                     <Heading size='md'>Create Budget</Heading>
                 </CardHeader>
                 <CardBody>
+                  <form onSubmit={handleCreateBudget}>
                     <Stack divider={<StackDivider />} spacing={4}>
                     <Box>
                         <Heading size='xs' textTransform='uppercase'>
                         Budget Name
                         </Heading>
                         <br />
-                        <Input />
+                        <Input
+                          placeholder='Name'
+                          onChange={(e) => setInput(e.target.value)}/>
                     </Box>
-                    <Box>
+                    {/* <Box>
                         <Heading size='xs' textTransform='uppercase'>
                         Amount
                         </Heading>
                         <br />
-                            <NumberInput>
-                            <NumberInputField />
-                            <NumberInputStepper>
-                                <NumberIncrementStepper />
-                                <NumberDecrementStepper />
-                            </NumberInputStepper>
-                            </NumberInput>
-                    </Box>
-                    <Button 
+                        <NumberInput>
+                        <NumberInputField />
+                        <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                        </NumberInputStepper>
+                        </NumberInput>
+                      </Box> */}
+                    <Button
+                    onSubmit={handleCreateBudget} 
                     leftIcon={<BiMoneyWithdraw />}
                     colorScheme={'green'}
                     bg={'green.400'}
@@ -113,10 +131,11 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
                     bgGradient="linear(to-r, green.400,green.700)"
                     color={'white'}
                     _hover={{
-                    bgGradient: 'linear(to-r, green.400,green.800)',
-                    boxShadow: 'xl'
+                      bgGradient: 'linear(to-r, green.400,green.800)',
+                      boxShadow: 'xl'
                     }}>Create Budget</Button>
                     </Stack>
+                    </form>
                 </CardBody>
                 </Card>
                     </Box>
@@ -124,7 +143,25 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
           </Stack>
         </Stack>
       </Container>
-    
+
+      {budgets.length > 0 ? 
+      <Box
+          p='40px'
+          color='gray.500'
+          mt='4'
+          bg='white.500'
+          rounded='md'
+          shadow='md'
+          >
+            <Heading size='xl'>Your Budgets</Heading>
+            <br />
+            <Card>
+              <CardHeader>
+                <Heading size='md'>{budgets[0]}</Heading>
+              </CardHeader>
+            </Card>
+          </Box>
+        : null}       
     </>
   )
 }
