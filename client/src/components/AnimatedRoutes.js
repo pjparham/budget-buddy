@@ -7,20 +7,40 @@ import { AnimatePresence } from 'framer-motion'
 
 function AnimatedRoutes() {
     const location = useLocation()
-    const [user, setUser] = useState([])
-  console.log(user)
-  useEffect(() => {
-    fetch("/check_session")
-    .then((r) => r.json())
-    .then(res => {
-      if (res.ok){
-        console.log('res', res)
-        res.json().then(setUser)
-      } else{
-        console.log(res)
+    const [user, setUser] = useState()
+
+//   useEffect(() => {
+//     fetch("/check_session")
+//     .then((r) => r.json())
+//     .then(res => {
+//       if (res.ok){
+//         console.log('res', res)
+//         res.json().then(setUser)
+//       } else{
+//         console.log(res)
+//       }
+//     })    
+//   }, [])
+
+useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("/check_session");
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+        } else {
+          console.log('Failed to fetch user data.');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
       }
-    })    
-  }, [])
+    };
+
+    fetchUserData();
+  }, []);
+
+  console.log(user)
 
 
   return (

@@ -19,11 +19,12 @@ import Navbar from './Navbar'
 import { BiMoneyWithdraw } from 'react-icons/bi'
 import { motion } from 'framer-motion'
 
-export default function CallToActionWithAnnotation({ setUser, user }) {
+export default function Home({ setUser, user }) {
     const [budgets, setBudgets] = useState([])
     const [input, setInput] = useState('')
     const toast = useToast()
     const { isOpen, onToggle } = useDisclosure()
+    
 
     function handleCreateBudget(e){
         e.preventDefault()
@@ -42,7 +43,7 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
         // })
     }
 
-    console.log(budgets)
+    console.log(user)
 
   return (
     <>
@@ -182,7 +183,7 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
               ))}
           </Box>
           </Container> 
-        : null}       
+        : null}      
     </>
   )
 }
