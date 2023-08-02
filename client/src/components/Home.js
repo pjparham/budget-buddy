@@ -12,14 +12,7 @@ import {
   CardBody,
   StackDivider,
   Input,
-  NumberInput,
-  NumberInputField,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInputStepper,
-  Icon,
-  useColorModeValue,
-  createIcon,
+  useToast,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import Navbar from './Navbar'
@@ -29,18 +22,27 @@ import { motion } from 'framer-motion'
 export default function CallToActionWithAnnotation({ setUser, user }) {
     const [budgets, setBudgets] = useState([])
     const [input, setInput] = useState('')
+    const toast = useToast()
     const { isOpen, onToggle } = useDisclosure()
 
     function handleCreateBudget(e){
         e.preventDefault()
         setBudgets([...budgets, input])
-        console.log(`created ${input}`)
+        setInput('')
+        toast({
+          title: `Created ${input} budget`,
+          status: "success",
+          position: "bottom",
+          isClosable: true,
+        })
         // fetch(`/users/${user.id}/budgets`, {
         //     method: "POST",
         //     headers: {'Content-Type': 'application/json'},
         //     body: JSON.stringify(user)
         // })
     }
+
+    console.log(budgets)
 
   return (
     <>
@@ -105,24 +107,15 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
                         </Heading>
                         <br />
                         <Input
-                          placeholder='Name'
-                          onChange={(e) => setInput(e.target.value)}/>
+                          type='text'
+                          value={input}
+                          placeholder='name'
+                          onChange={(e) => setInput(e.target.value)}
+                          isRequired
+                          />
                     </Box>
-                    {/* <Box>
-                        <Heading size='xs' textTransform='uppercase'>
-                        Amount
-                        </Heading>
-                        <br />
-                        <NumberInput>
-                        <NumberInputField />
-                        <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                        </NumberInputStepper>
-                        </NumberInput>
-                      </Box> */}
                     <Button
-                    onSubmit={handleCreateBudget} 
+                    type='submit'
                     leftIcon={<BiMoneyWithdraw />}
                     colorScheme={'green'}
                     bg={'green.400'}
@@ -144,7 +137,9 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
         </Stack>
       </Container>
 
-      {budgets.length > 0 ? 
+
+      {budgets.length > 0 ?
+      <Container maxW={'xl'}>
       <Box
           p='40px'
           color='gray.500'
@@ -155,12 +150,35 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
           >
             <Heading size='xl'>Your Budgets</Heading>
             <br />
-            <Card>
-              <CardHeader>
-                <Heading size='md'>{budgets[0]}</Heading>
-              </CardHeader>
-            </Card>
+              {budgets.map(bud => (
+              //   <Card align='center'>
+              //   <CardHeader>
+              //     <Heading size='md'>{bud}</Heading>
+              //   </CardHeader>
+              //   <CardBody>
+              //     <Text>Testing</Text>
+              //   </CardBody>
+              //   <CardFooter>
+              //     <Button colorScheme='green'
+              //             bg={'green.400'}>View here</Button>
+              //   </CardFooter>
+              // </Card>
+              <Stack spacing='4'>
+                  <Card key={bud} variant='outline'>
+                    <CardHeader>
+                      <Heading size='md'>{bud}</Heading>
+                    </CardHeader>
+                    <CardBody>
+                    <Button colorScheme='green'
+                          bg={'green.400'}
+                          rounded={'full'}>View here</Button>
+                    </CardBody>
+                  </Card>
+                  <br />
+              </Stack>
+              ))}
           </Box>
+          </Container> 
         : null}       
     </>
   )
