@@ -47,13 +47,17 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
   return (
     <>
     <Navbar setUser={setUser} />
-      <Container maxW={'3xl'}>
+      <Container maxW={'1xl'}>
         <Stack
           as={Box}
           textAlign={'center'}
           spacing={{ base: 8, md: 14 }}
           py={{ base: 20, md: 36 }}>
           <Heading
+            as={motion.h1}
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -100 }}
             fontWeight={600}
             fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' }}
             lineHeight={'110%'}>
@@ -136,7 +140,6 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
           </Stack>
         </Stack>
       </Container>
-
 
       {budgets.length > 0 ?
       <Container maxW={'xl'}>
