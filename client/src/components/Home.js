@@ -25,21 +25,33 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
     const toast = useToast()
     const { isOpen, onToggle } = useDisclosure()
 
+    function addBudget(newBudget){
+      let allBudgets = [...budgets, newBudget]
+      setBudgets(allBudgets)
+    }
+
     function handleCreateBudget(e){
-        e.preventDefault()
-        setBudgets([...budgets, input])
-        setInput('')
-        toast({
-          title: `Created ${input} budget`,
-          status: "success",
-          position: "bottom",
-          isClosable: true,
-        })
-        // fetch(`/users/${user.id}/budgets`, {
-        //     method: "POST",
-        //     headers: {'Content-Type': 'application/json'},
-        //     body: JSON.stringify(user)
-        // })
+      e.preventDefault()
+      fetch('/budgets', {
+        method: "POST",
+        headers: {"Content-Type": 'application/json'},
+        body: JSON.stringify({ title: input})
+      })
+      .then((r) => {
+        if(r.ok){
+          r.json()
+          .then((newBudget) => addBudget(newBudget))
+          setInput('')
+          toast({
+            title: `Created ${input} budget`,
+            status: "success",
+            position: "bottom",
+            isClosable: true,
+          })
+        } else{
+          r.json().then(e => console.log(e))
+        }
+      })
     }
 
     console.log(budgets)
@@ -167,9 +179,9 @@ export default function CallToActionWithAnnotation({ setUser, user }) {
               //   </CardFooter>
               // </Card>
               <Stack spacing='4'>
-                  <Card key={bud} variant='outline'>
+                  <Card key={bud.id} variant='outline'>
                     <CardHeader>
-                      <Heading size='md'>{bud}</Heading>
+                      <Heading size='md'>{bud.title}</Heading>
                     </CardHeader>
                     <CardBody>
                     <Button colorScheme='green'
