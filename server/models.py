@@ -84,6 +84,11 @@ class Budget(BaseModel):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    def to_dict(self, visited=None):
+        serialized = super().to_dict(visited)
+        serialized.pop('user', None)
+        return serialized
+
     def __repr__(self):
         return f'<Budget {self.title}>'
 
