@@ -58,6 +58,7 @@ export default function Nav({ setUser }) {
           <Button
             leftIcon={<FcMoneyTransfer size={'3em'}/>}
             variant={'ghost'}
+            onClick={() => navigate('/home')}
           >BudgetBuddy</Button>
           
           <Flex alignItems={'center'}>
