@@ -1,14 +1,14 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import AnimatedRoutes from './components/AnimatedRoutes.js';
+import { useEffect, useState } from 'react';
 
 function App() {
   
-
   return (
     <div className="App">
       <Router>
-        <AnimatedRoutes />
+        <AnimatedRoutes/>
       </Router>
     </div>
   );
