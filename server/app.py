@@ -74,6 +74,21 @@ class Users(Resource):
         db.session.commit()
 
         return make_response(jsonify(user.to_dict()), 200)
+    
+    def delete(self):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        user = User.query.filter(User.id == session['user_id']).first()
+        
+        try:
+            db.session.delete(user)
+            db.session.commit()
+            return make_response(jsonify({'message': 'User deleted successfully'}), 200)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while deleting the user'}), 500)
 
 api.add_resource(Users, '/users')
 
