@@ -9,10 +9,12 @@ import {
     useBreakpointValue,
     Icon,
   } from '@chakra-ui/react';
-  import { FcMoneyTransfer, FcCalculator } from 'react-icons/fc';
-  import { useState } from 'react';
-  import Signup from './Signup';
-  import Login from './Login';
+  import { FcMoneyTransfer, FcCalculator } from 'react-icons/fc'
+  import { useState } from 'react'
+  import Signup from './Signup'
+  import Login from './Login'
+  import Lottie from 'lottie-react'
+  import BudgetBuddy from '../lottie/BudgetBuddy.json'
 
   export default function Landing({ setUser }) {
     const [isLogin, setIsLogin] = useState(false)
@@ -50,12 +52,13 @@ import {
                 Buddy
               </Text>{' '}
             </Heading>
-            <Stack direction={'column'} spacing={5} align={'center'}>
+            {/* <Stack direction={'row'} spacing={5} align={'center'}> */}
 
-                <FcMoneyTransfer size={'5em'}/>
-                <FcCalculator size={'5em'}/>
+                {/* <FcMoneyTransfer size={'5em'}/>
+                <FcCalculator size={'5em'}/> */}
+                <Lottie loop={true} animationData={BudgetBuddy} />
               
-              <Text fontFamily={'heading'} fontSize={{ base: '3xl', md: '5xl' }}>
+              {/* <Text fontFamily={'heading'} fontSize={{ base: '3xl', md: '5xl' }}>
                 +
               </Text>
               <Flex
@@ -82,8 +85,8 @@ import {
                   left: 0,
                 }}>
                  YOU
-              </Flex>
-            </Stack>
+              </Flex> */}
+            {/* </Stack> */}
           </Stack>
           {isLogin ? 
           <Login userForm={userForm} setUser={setUser} handleChange={handleChange} setIsLogin={setIsLogin}/> :

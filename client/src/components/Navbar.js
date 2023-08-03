@@ -38,7 +38,7 @@ const NavLink = (props) => {
   )
 }
 
-export default function Nav({ setUser }) {
+export default function Nav({ user, setUser }) {
   const { colorMode, toggleColorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const navigate = useNavigate()
@@ -89,7 +89,7 @@ export default function Nav({ setUser }) {
                   </Center>
                   <br />
                   <Center>
-                    <p>Username</p>
+                    <p>{user.name}</p>
                   </Center>
                   <br />
                   <MenuDivider />
