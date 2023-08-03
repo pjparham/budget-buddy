@@ -55,6 +55,27 @@ class Users(Resource):
 api.add_resource(Users, '/users')
 
 class Budgets(Resource):
+    def get(self, budget_id):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        budget = Budget.query.get(budget_id)
+        if not budget:
+            return make_response(jsonify({'error': 'Budget not found'}), 404)
+        
+        # check if budget belongs to logged in user
+        user = User.query.filter(User.id == session['user_id']).first()
+        if budget.user != user:
+            return make_response(jsonify({'error': 'Not authorized to retrieve this budget'}), 401)
+        
+        try:
+            return make_response(jsonify(budget.to_dict()), 200)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while deleting the budget'}), 500)
+
+
     def post(self):
         data = request.get_json()
         title = data.get('title')
