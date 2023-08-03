@@ -64,6 +64,8 @@ class User(BaseModel):
     def to_dict(self, visited=None):
         serialized = super().to_dict(visited)
         serialized.pop('password_hash', None)
+        serialized.pop('budgets', None)
+        serialized['budgets'] = [{'id': budget.id, 'title': budget.title} for budget in self.budgets]
         return serialized
     
 
@@ -103,7 +105,10 @@ class Income(BaseModel):
 
     budget_id = db.Column(db.Integer, db.ForeignKey('budgets.id'))
 
-    include_timestamps = True
+    def to_dict(self, visited=None):
+        serialized = super().to_dict(visited)
+        serialized.pop('budget', None)
+        return serialized
 
     def __repr__(self):
         return f'<Income {self.title}, Amount {self.amount}>'
