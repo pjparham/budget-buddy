@@ -50,7 +50,30 @@ class Users(Resource):
         db.session.commit()
 
         return make_response(jsonify(new_user.to_dict()), 201)
+    
+    def patch(self):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        user = User.query.filter(User.id == session['user_id']).first()
+        if not user:
+            return make_response(jsonify({'error': 'User not found'}), 404)
+        
+        data = request.get_json()
+        name = data.get('name')
+        password = data.get('password')
+        email = data.get('email')
+        
+        if not name or not password or not email:
+            return make_response(jsonify({'error': 'Name, Email, and Password are required fields'}), 400)
+        
+        user.email = email
+        user.name = name
+        user.password_hash = user._generate_password_hash(password)
+        
+        db.session.commit()
 
+        return make_response(jsonify(user.to_dict()), 200)
 
 api.add_resource(Users, '/users')
 
