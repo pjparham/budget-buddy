@@ -126,6 +126,11 @@ class Category(BaseModel):
 
     budget_id = db.Column(db.Integer, db.ForeignKey('budgets.id'))
 
+    def to_dict(self, visited=None):
+        serialized = super().to_dict(visited)
+        serialized.pop('budget', None)
+        return serialized
+
     def __repr__(self):
         return f'<Category {self.title}, amount {self.amount}>'
 
