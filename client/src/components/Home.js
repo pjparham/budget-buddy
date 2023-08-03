@@ -49,13 +49,13 @@ export default function Home({ setUser, user }) {
             position: "bottom",
             isClosable: true,
           })
-        } else{
+        } else {
           r.json().then(e => console.log(e))
         }
       })
     }
 
-    console.log(user)
+    console.log(Boolean(user), user)
 
   return (
     <>
@@ -154,7 +154,7 @@ export default function Home({ setUser, user }) {
         </Stack>
       </Container>
 
-      {budgets.length > 0 ?
+      {user && user.budgets?.length > 0 ?
       <Container maxW={'xl'}>
       <Box
           p='40px'
@@ -166,23 +166,11 @@ export default function Home({ setUser, user }) {
           >
             <Heading size='xl'>Your Budgets</Heading>
             <br />
-              {budgets.map(bud => (
-              //   <Card align='center'>
-              //   <CardHeader>
-              //     <Heading size='md'>{bud}</Heading>
-              //   </CardHeader>
-              //   <CardBody>
-              //     <Text>Testing</Text>
-              //   </CardBody>
-              //   <CardFooter>
-              //     <Button colorScheme='green'
-              //             bg={'green.400'}>View here</Button>
-              //   </CardFooter>
-              // </Card>
+              {user?.budgets.map(bud => (
               <Stack spacing='4'>
                   <Card key={bud.id} variant='outline'>
                     <CardHeader>
-                      <Heading size='md'>{bud.title}</Heading>
+                      <Heading size='md'>{bud?.title}</Heading>
                     </CardHeader>
                     <CardBody>
                     <Button colorScheme='green'
