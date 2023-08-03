@@ -18,13 +18,21 @@ import { useState } from 'react'
 import Navbar from './Navbar'
 import { BiMoneyWithdraw } from 'react-icons/bi'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
+import Lottie from 'lottie-react'
+import budgetLoading from '../lottie/BudgetAnimation.json'
+import MoneyBag from '../lottie/MoneyBag.json'
 
 export default function Home({ setUser, user }) {
     const [budgets, setBudgets] = useState([])
     const [input, setInput] = useState('')
     const toast = useToast()
     const { isOpen, onToggle } = useDisclosure()
+    const navigate = useNavigate()
     
+    function budgetLink(budId){
+      navigate(`/budgets/${budId}`)
+    }
 
     function addBudget(newBudget){
       let allBudgets = [...budgets, newBudget]
@@ -42,6 +50,7 @@ export default function Home({ setUser, user }) {
         if(r.ok){
           r.json()
           .then((newBudget) => addBudget(newBudget))
+          
           setInput('')
           toast({
             title: `Created ${input} budget`,
@@ -56,10 +65,13 @@ export default function Home({ setUser, user }) {
     }
 
     console.log(Boolean(user), user)
+    console.log(budgets)
+
+    if (!user) return <Lottie loop={true} animationData={budgetLoading}/>
 
   return (
     <>
-    <Navbar setUser={setUser} />
+    <Navbar setUser={setUser} user={user} />
       <Container maxW={'1xl'}>
         <Stack
           as={Box}
@@ -175,7 +187,9 @@ export default function Home({ setUser, user }) {
                     <CardBody>
                     <Button colorScheme='green'
                           bg={'green.400'}
-                          rounded={'full'}>View here</Button>
+                          rounded={'full'}
+                          onClick={() => budgetLink(bud.id)}
+                          >View Details</Button>
                     </CardBody>
                   </Card>
                   <br />
