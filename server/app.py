@@ -51,8 +51,8 @@ class Users(Resource):
 
         return make_response(jsonify(new_user.to_dict()), 201)
     
-    def patch(self):
-        if not session.get('user_id'):
+    def patch(self, user_id):
+        if not session.get('user_id') or session.get('user_id') != user_id:
             return make_response(jsonify({'error': 'Not authorized'}), 401)
         
         user = User.query.filter(User.id == session['user_id']).first()
@@ -75,8 +75,8 @@ class Users(Resource):
 
         return make_response(jsonify(user.to_dict()), 200)
     
-    def delete(self):
-        if not session.get('user_id'):
+    def delete(self, user_id):
+        if not session.get('user_id') or session.get('user_id') != user_id:
             return make_response(jsonify({'error': 'Not authorized'}), 401)
         
         user = User.query.filter(User.id == session['user_id']).first()
@@ -90,7 +90,7 @@ class Users(Resource):
             db.session.rollback()
             return make_response(jsonify({'error': 'An error occurred while deleting the user'}), 500)
 
-api.add_resource(Users, '/users')
+api.add_resource(Users, '/users', '/users/<int:user_id>')
 
 class Budgets(Resource):
     def get(self, budget_id):
