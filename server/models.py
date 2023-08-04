@@ -86,6 +86,13 @@ class Budget(BaseModel):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    def calculate_remaining_amount(self):
+        total_income = sum(income.amount for income in self.incomes)
+        total_expenses = sum(category.amount for category in self.categories)
+        remaining_amount = total_income - total_expenses
+        self.remaining_amount = remaining_amount
+        db.session.commit()
+
     def to_dict(self, visited=None):
         serialized = super().to_dict(visited)
         serialized.pop('user', None)

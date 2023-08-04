@@ -1,10 +1,10 @@
-import Navbar from './Navbar'
 import { motion } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Heading, Text } from '@chakra-ui/react'
-import { Chart } from 'react-google-charts'
+import BudgetChart from './BudgetChart'
 import BudgetTable from './BudgetTable'
+import Navbar from './Navbar'
 
 const Budget = ({ setUser, user }) => {
   const [budget, setBudget] = useState();
@@ -42,31 +42,6 @@ const Budget = ({ setUser, user }) => {
         setTransactions(allTransactions.flat());
       }
     }
-    // console.log(transactions, 'transactions')
-
-    console.log(categories)
-
-
-    const data = [
-        ["Task", "Hours per Day"],
-        ["Work", 11],
-        ["Eat", 2],
-        ["Commute", 2],
-        ["Watch TV", 2],
-        ["Sleep", 7],
-      ];
-      
-    const options = {
-        title: "My Daily Activities",
-        backgroundColor: "transparent",
-        is3D: true,
-        titleTextStyle: {
-            color: '#B2BEB5'
-        },
-        legendTextStyle: {
-            color: '#B2BEB5'
-        },
-      }
 
 
   return (
@@ -87,13 +62,7 @@ const Budget = ({ setUser, user }) => {
         {budget?.title} Overview
         </Text>
     </Heading>
-        <Chart
-            chartType="PieChart"
-            data={data}
-            options={options}
-            width="100%"
-            height="400px"
-            />
+    <BudgetChart budget={budget} categories={categories}/>
         <br />
         <br />
         <BudgetTable transactions={transactions}/>
