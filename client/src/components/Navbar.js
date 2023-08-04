@@ -89,12 +89,11 @@ export default function Nav({ user, setUser }) {
                   </Center>
                   <br />
                   <Center>
-                    <p>{user.name}</p>
+                    <p>{user?.name}</p>
                   </Center>
                   <br />
                   <MenuDivider />
-                  <MenuItem>My Budgets</MenuItem>
-                  <MenuItem>Account Settings</MenuItem>
+                  <MenuItem onClick={() => navigate('/user/profile')}>Account Settings</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </MenuList>
               </Menu>

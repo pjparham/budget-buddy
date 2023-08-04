@@ -71,7 +71,7 @@ export default function Home({ setUser, user }) {
 
   return (
     <>
-    <Navbar setUser={setUser} user={user} />
+    <Navbar setUser={setUser} user={user}/>
       <Container maxW={'1xl'}>
         <Stack
           as={Box}
@@ -180,9 +180,9 @@ export default function Home({ setUser, user }) {
             <br />
               {user?.budgets.map(bud => (
               <Stack spacing='4'>
-                  <Card key={bud.id} variant='outline'>
+                  <Card variant='outline'>
                     <CardHeader>
-                      <Heading size='md'>{bud?.title}</Heading>
+                      <Heading size='md' key={bud.id}>{bud?.title}</Heading>
                     </CardHeader>
                     <CardBody>
                     <Button colorScheme='green'
