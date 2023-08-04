@@ -16,14 +16,43 @@ import { BsTrash3Fill } from 'react-icons/bs'
 import { Chart } from 'react-google-charts'
 
 const Budget = ({ setUser, user }) => {
-    const [budget, setBudget] = useState()
-    const { id } = useParams()
+  const [budget, setBudget] = useState();
+  const [categories, setCategories] = useState();
+  const [transactions, setTransactions] = useState([]);
+
+  const { id } = useParams()
 
     useEffect(() => {
         fetch(`/budgets/${id}`)
         .then(res => res.json())
         .then(setBudget)
     }, [])
+
+    useEffect(() => {
+      if(budget) {
+        updateCategories()
+        updateTransactions()
+      }
+    }, [budget]);
+
+    function updateCategories(){
+      setCategories(budget.categories)
+    }
+
+    function updateTransactions() {
+      if (categories) {
+        let allTransactions = [];
+        allTransactions.push(budget.incomes);
+    
+        categories.forEach((category) => {
+          allTransactions.push(category.expenses);
+        });
+    
+        setTransactions(allTransactions.flat());
+      }
+    }
+    console.log(transactions, 'transactions')
+
 
     console.log(budget)
 
@@ -90,11 +119,11 @@ const Budget = ({ setUser, user }) => {
       </Tr>
     </Thead>
     <Tbody>
-        {budget?.categories.map(cat => { (
+        {transactions?.map(transaction => { return (
       <Tr>
-        <Td>{cat.title}</Td>
-        <Td>{cat.created_at}</Td>
-        <Td >{cat.amount}</Td>
+        <Td>{transaction.title}</Td>
+        <Td>{transaction.created_at}</Td>
+        <Td color={transaction.category_id ? "red.600" : "green.700"}>{transaction.amount}</Td>
         <Td><IconButton
                 icon={<BsTrash3Fill />}
                 /></Td>
