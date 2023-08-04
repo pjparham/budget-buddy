@@ -2,18 +2,9 @@ import Navbar from './Navbar'
 import { motion } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Heading, 
-        Text,
-        Table,
-        Thead,
-        Tbody,
-        Tr,
-        Th,
-        Td,
-        TableContainer,
-        IconButton, } from '@chakra-ui/react'
-import { BsTrash3Fill } from 'react-icons/bs'
+import { Heading, Text } from '@chakra-ui/react'
 import { Chart } from 'react-google-charts'
+import BudgetTable from './BudgetTable'
 
 const Budget = ({ setUser, user }) => {
   const [budget, setBudget] = useState();
@@ -51,10 +42,10 @@ const Budget = ({ setUser, user }) => {
         setTransactions(allTransactions.flat());
       }
     }
-    console.log(transactions, 'transactions')
+    // console.log(transactions, 'transactions')
 
 
-    console.log(budget)
+    // console.log(budget)
 
     const data = [
         ["Task", "Hours per Day"],
@@ -76,9 +67,6 @@ const Budget = ({ setUser, user }) => {
             color: '#B2BEB5'
         },
       }
-
-    const renderCat = budget?.categories.map(cat => cat.title)
-    const renderAmt = budget?.categories.map(cat => cat.amount)
 
 
   return (
@@ -108,31 +96,7 @@ const Budget = ({ setUser, user }) => {
             />
         <br />
         <br />
-    <TableContainer>
-  <Table variant='simple'>
-    <Thead>
-      <Tr>
-        <Th>Name</Th>
-        <Th>Date</Th>
-        <Th >Amount</Th>
-        <Th></Th>
-      </Tr>
-    </Thead>
-    <Tbody>
-        {transactions?.map(transaction => { return (
-      <Tr>
-        <Td>{transaction.title}</Td>
-        <Td>{transaction.created_at}</Td>
-        <Td color={transaction.category_id ? "red.600" : "green.700"}>{transaction.amount}</Td>
-        <Td><IconButton
-                icon={<BsTrash3Fill />}
-                /></Td>
-    </Tr>
-        )}
-    )}
-    </Tbody>
-  </Table>
-</TableContainer>
+        <BudgetTable transactions={transactions}/>
     </>
   )
 }
