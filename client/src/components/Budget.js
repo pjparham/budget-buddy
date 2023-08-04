@@ -44,8 +44,8 @@ const Budget = ({ setUser, user }) => {
     }
     // console.log(transactions, 'transactions')
 
+    console.log(categories)
 
-    // console.log(budget)
 
     const data = [
         ["Task", "Hours per Day"],

@@ -1,4 +1,4 @@
-
+import { useState, useEffect } from 'react';
 import { 
   Table,
   Thead,
@@ -11,6 +11,13 @@ import {
 import { BsTrash3Fill } from 'react-icons/bs'
 
 export default function BudgetTable( {transactions }) {
+  const [sortedTransactions, setSortedTransactions] = useState([]);
+
+  useEffect(() => {
+    const sorted = [...transactions].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    setSortedTransactions(sorted);
+  }, [transactions]);
+
   return (
     <> 
       <TableContainer>
@@ -24,7 +31,7 @@ export default function BudgetTable( {transactions }) {
             </Tr>
           </Thead>
           <Tbody>
-              {transactions?.map(transaction => { return (
+              {sortedTransactions?.map(transaction => { return (
             <Tr key={transaction.title}>
               <Td>{transaction.title}</Td>
               <Td>{transaction.created_at}</Td>

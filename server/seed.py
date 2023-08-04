@@ -18,7 +18,7 @@ with app.app_context():
 
     income1 = Income(title='First paycheck', amount=1200, budget=budget1)
     db.session.add(income1)
-    income2 = Income(title='second paycheck', amount=122, budget=budget1)
+    income2 = Income(title='second paycheck', amount=1220, budget=budget1)
     db.session.add(income2)
 
     category1 = Category(title='food', amount=500, budget=budget1)
