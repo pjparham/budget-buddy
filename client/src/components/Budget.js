@@ -2,22 +2,16 @@ import Navbar from './Navbar'
 import { motion } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Heading, 
-        Text,
-        Table,
-        Thead,
-        Tbody,
-        Tr,
-        Th,
-        Td,
-        TableContainer,
-        IconButton, } from '@chakra-ui/react'
-import { BsTrash3Fill } from 'react-icons/bs'
+import { Heading, Text } from '@chakra-ui/react'
 import { Chart } from 'react-google-charts'
+import BudgetTable from './BudgetTable'
 
 const Budget = ({ setUser, user }) => {
-    const [budget, setBudget] = useState()
-    const { id } = useParams()
+  const [budget, setBudget] = useState();
+  const [categories, setCategories] = useState();
+  const [transactions, setTransactions] = useState([]);
+
+  const { id } = useParams()
 
     useEffect(() => {
         fetch(`/budgets/${id}`)
@@ -25,7 +19,33 @@ const Budget = ({ setUser, user }) => {
         .then(setBudget)
     }, [])
 
-    console.log(budget)
+    useEffect(() => {
+      if(budget) {
+        updateCategories()
+        updateTransactions()
+      }
+    }, [budget]);
+
+    function updateCategories(){
+      setCategories(budget.categories)
+    }
+
+    function updateTransactions() {
+      if (categories) {
+        let allTransactions = [];
+        allTransactions.push(budget.incomes);
+    
+        categories.forEach((category) => {
+          allTransactions.push(category.expenses);
+        });
+    
+        setTransactions(allTransactions.flat());
+      }
+    }
+    // console.log(transactions, 'transactions')
+
+
+    // console.log(budget)
 
     const data = [
         ["Task", "Hours per Day"],
@@ -47,9 +67,6 @@ const Budget = ({ setUser, user }) => {
             color: '#B2BEB5'
         },
       }
-
-    const renderCat = budget?.categories.map(cat => cat.title)
-    const renderAmt = budget?.categories.map(cat => cat.amount)
 
 
   return (
@@ -79,31 +96,7 @@ const Budget = ({ setUser, user }) => {
             />
         <br />
         <br />
-    <TableContainer>
-  <Table variant='simple'>
-    <Thead>
-      <Tr>
-        <Th>Name</Th>
-        <Th>Date</Th>
-        <Th >Amount</Th>
-        <Th></Th>
-      </Tr>
-    </Thead>
-    <Tbody>
-        {budget?.categories.map(cat => { (
-      <Tr>
-        <Td>{cat.title}</Td>
-        <Td>{cat.created_at}</Td>
-        <Td >{cat.amount}</Td>
-        <Td><IconButton
-                icon={<BsTrash3Fill />}
-                /></Td>
-    </Tr>
-        )}
-    )}
-    </Tbody>
-  </Table>
-</TableContainer>
+        <BudgetTable transactions={transactions}/>
     </>
   )
 }
