@@ -1,5 +1,6 @@
 import React from 'react'
 import { Chart } from 'react-google-charts'
+import { Container } from '@chakra-ui/react';
 
 export default function BudgetChart({ budget, categories }) {
     const data = [["Category", "Amount Allocated"]];
@@ -24,7 +25,7 @@ export default function BudgetChart({ budget, categories }) {
       }
 
   return budget && categories ? (
-    <>
+    <Container>
         <Chart
         chartType="PieChart"
         data={data}
@@ -32,6 +33,6 @@ export default function BudgetChart({ budget, categories }) {
         width="100%"
         height="400px"
         />
-    </>
+    </Container>
   ) : <><br/><h1>Loading...</h1></>;
 }
