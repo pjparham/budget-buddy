@@ -4,6 +4,7 @@ import Landing from './Landing'
 import LoginTest from './LoginTest'
 import Home from './Home'
 import Budget from './Budget'
+import UserProfile from './UserProfile'
 import { AnimatePresence } from 'framer-motion'
 
 function AnimatedRoutes() {
@@ -52,6 +53,7 @@ useEffect(() => {
             <Route exact path='/login-test' element={<LoginTest setUser={setUser}/>}/>
             <Route exact path='/home' element={<Home setUser={setUser} user={user}/>}/>
             <Route exact path='/budgets/:id' element={<Budget setUser={setUser} user={user}/>}/>
+            <Route exact path='/user/profile' element={<UserProfile setUser={setUser} user={user}/>}/>
         </Routes>
     </AnimatePresence>
   )
