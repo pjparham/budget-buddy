@@ -1,10 +1,19 @@
 import { motion } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Heading, Text } from '@chakra-ui/react'
+import { Heading, Progress, Text } from '@chakra-ui/react'
 import BudgetChart from './BudgetChart'
 import BudgetTable from './BudgetTable'
 import Navbar from './Navbar'
+import { Card,
+         CardHeader,
+         CardBody,
+         CardFooter,
+         SimpleGrid,
+         Button,
+         Input, } from '@chakra-ui/react'
+import { BsTrash3Fill } from 'react-icons/bs'
+import { IoMdAdd } from 'react-icons/io'
 
 const Budget = ({ setUser, user }) => {
   const [budget, setBudget] = useState();
@@ -43,6 +52,11 @@ const Budget = ({ setUser, user }) => {
       }
     }
 
+    const totalTransactions = transactions?.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.amount;
+    }, 0)
+
+    console.log(categories)
 
   return (
     <>
@@ -63,11 +77,89 @@ const Budget = ({ setUser, user }) => {
         </Text>
     </Heading>
     <BudgetChart budget={budget} categories={categories}/>
-        <br />
-        <br />
-        <BudgetTable transactions={transactions}/>
+    <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
+                justifyContent={"center"}
+                alignContent={"center"}
+                display={"flex"}
+                flexWrap={"wrap"}
+                mb={'4'}>
+        <Card>
+          <CardHeader>
+            <Heading size='md'>Total Spent</Heading>
+          </CardHeader>
+          <CardBody>
+            <Progress value={totalTransactions} colorScheme='green' size='sm' mb={'2'} />
+            <Text>{totalTransactions}</Text>
+          </CardBody>
+        <CardFooter>
+          <Button colorScheme='red'
+                  bg={'red.400'}
+                  rounded={'full'}
+                  leftIcon={<BsTrash3Fill/>}
+                  >Delete Budget</Button>
+        </CardFooter>
+        </Card>
+      <Card>
+        <CardHeader>
+          <Heading size='md'>Add New Category</Heading>
+        </CardHeader>
+        <CardBody>
+          <Text>Category Name</Text>
+          <Input placeholder="Expense Name" />
+          <Text>Amount</Text>
+          <Input placeholder="Amount" /> 
+        </CardBody>
+        <CardFooter justifyContent='center'>
+        <Button colorScheme='green'
+                  bg={'green.400'}
+                  rounded={'full'}
+                  leftIcon={<IoMdAdd/>}
+                  >Add Category</Button>
+        </CardFooter>
+      </Card>
+      <Card>
+        <CardHeader>
+          <Heading size='md'>Add Income</Heading>
+        </CardHeader>
+        <CardBody>
+          <Text>Income Name</Text>
+          <Input placeholder="Income Name" />
+          <Text>Amount</Text>
+          <Input placeholder="Amount" /> 
+        </CardBody>
+        <CardFooter justifyContent={'center'}>
+          <Button colorScheme='green'
+                  bg={'green.400'}
+                  rounded={'full'}
+                  leftIcon={<IoMdAdd/>}
+                  >Add Income</Button>
+        </CardFooter>
+      </Card>
+      <Card>
+        <CardHeader>
+          <Heading size='md'>Add Expense</Heading>
+        </CardHeader>
+        <CardBody>
+        <Text>Expense Name</Text>
+          <Input placeholder="Expense Name" />
+          <Text>Amount</Text>
+          <Input placeholder="Amount" /> 
+        </CardBody>
+        <CardFooter justifyContent={'center'}>
+          <Button colorScheme='green'
+                  bg={'green.400'}
+                  rounded={'full'}
+                  leftIcon={<IoMdAdd/>}
+                  >Add Expense</Button>
+        </CardFooter>
+      </Card>
+    </SimpleGrid>
+  <BudgetTable transactions={transactions}/>
+
     </>
   )
 }
 
 export default Budget
+
+{/*  */}
