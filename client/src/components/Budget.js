@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, Reorder } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Heading, Progress, Text } from '@chakra-ui/react'
@@ -19,6 +19,7 @@ const Budget = ({ setUser, user }) => {
   const [budget, setBudget] = useState();
   const [categories, setCategories] = useState();
   const [transactions, setTransactions] = useState([]);
+  const [items, setItems] = useState([0, 1, 2, 3]);
 
   const { id } = useParams()
 
@@ -77,12 +78,14 @@ const Budget = ({ setUser, user }) => {
         </Text>
     </Heading>
     <BudgetChart budget={budget} categories={categories}/>
+    <Reorder.Group axis='x' values={items} onReorder={setItems}>
     <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
                 justifyContent={"center"}
                 alignContent={"center"}
                 display={"flex"}
                 flexWrap={"wrap"}
                 mb={'4'}>
+        <Reorder.Item key={items[0]} value={setItems}>
         <Card>
           <CardHeader>
             <Heading size='md'>Total Spent</Heading>
@@ -99,6 +102,8 @@ const Budget = ({ setUser, user }) => {
                   >Delete Budget</Button>
         </CardFooter>
         </Card>
+      </Reorder.Item>
+      <Reorder.Item key={items[1]} value={setItems}>
       <Card>
         <CardHeader>
           <Heading size='md'>Add New Category</Heading>
@@ -117,6 +122,8 @@ const Budget = ({ setUser, user }) => {
                   >Add Category</Button>
         </CardFooter>
       </Card>
+      </Reorder.Item>
+      <Reorder.Item key={items[2]} value={setItems}>
       <Card>
         <CardHeader>
           <Heading size='md'>Add Income</Heading>
@@ -135,6 +142,8 @@ const Budget = ({ setUser, user }) => {
                   >Add Income</Button>
         </CardFooter>
       </Card>
+      </Reorder.Item>
+      <Reorder.Item key={items[3]} value={setItems}>
       <Card>
         <CardHeader>
           <Heading size='md'>Add Expense</Heading>
@@ -153,7 +162,9 @@ const Budget = ({ setUser, user }) => {
                   >Add Expense</Button>
         </CardFooter>
       </Card>
+      </Reorder.Item>
     </SimpleGrid>
+    </Reorder.Group>
   <BudgetTable transactions={transactions}/>
 
     </>
