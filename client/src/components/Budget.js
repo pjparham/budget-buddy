@@ -86,8 +86,9 @@ const Budget = ({ setUser, user }) => {
     <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
                 justifyContent={"center"}
                 display={"flex"}
+                flexWrap={"wrap"}
                 mb={'4'}>
-        <Reorder.Item key={items[0]} value={setItems}>
+        <Reorder.Item key={items[0]} value={items[0]}>
         <Card>
           <CardHeader>
             <Heading size='md'>Total Spent</Heading>
@@ -106,7 +107,7 @@ const Budget = ({ setUser, user }) => {
         </CardFooter>
         </Card>
       </Reorder.Item>
-      <Reorder.Item key={items[1]} value={setItems}>
+      <Reorder.Item key={items[1]} value={items[1]}>
       <Card>
         <CardHeader>
           <Heading size='md'>Add New Category</Heading>
@@ -126,7 +127,7 @@ const Budget = ({ setUser, user }) => {
         </CardFooter>
       </Card>
       </Reorder.Item>
-      <Reorder.Item key={items[2]} value={setItems}>
+      <Reorder.Item key={items[2]} value={items[2]}>
       <Card>
         <CardHeader>
           <Heading size='md'>Add Income</Heading>
@@ -137,7 +138,7 @@ const Budget = ({ setUser, user }) => {
           <Text>Amount</Text>
           <Input placeholder="Amount" /> 
         </CardBody>
-        <CardFooter justifyContent={'center'}>
+        <CardFooter justifyContent='center'>
           <Button colorScheme='green'
                   bg={'green.400'}
                   rounded={'full'}
@@ -146,7 +147,7 @@ const Budget = ({ setUser, user }) => {
         </CardFooter>
       </Card>
       </Reorder.Item>
-      <Reorder.Item key={items[3]} value={setItems}>
+      <Reorder.Item key={items[3]} value={items[3]}>
       <Card>
         <CardHeader>
           <Heading size='md'>Add Expense</Heading>
@@ -157,7 +158,7 @@ const Budget = ({ setUser, user }) => {
           <Text>Amount</Text>
           <Input placeholder="Amount" /> 
         </CardBody>
-        <CardFooter justifyContent={'center'}>
+        <CardFooter justifyContent='center'>
           <Button colorScheme='green'
                   bg={'green.400'}
                   rounded={'full'}
@@ -169,11 +170,8 @@ const Budget = ({ setUser, user }) => {
     </SimpleGrid>
     </Reorder.Group>
   <BudgetTable transactions={transactions}/>
-
     </>
   )
 }
 
 export default Budget
-
-{/*  */}

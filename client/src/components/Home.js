@@ -13,30 +13,31 @@ import {
   StackDivider,
   Input,
   useToast,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Navbar from './Navbar'
 import { BiMoneyWithdraw } from 'react-icons/bi'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import Lottie from 'lottie-react'
 import budgetLoading from '../lottie/BudgetAnimation.json'
-import MoneyBag from '../lottie/MoneyBag.json'
 
 export default function Home({ setUser, user }) {
-    const [budgets, setBudgets] = useState([])
+    const [open, setOpen] = useState(false)
     const [input, setInput] = useState('')
     const toast = useToast()
-    const { isOpen, onToggle } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const navigate = useNavigate()
+    const cancelRef = useRef()
     
     function budgetLink(budId){
       navigate(`/budgets/${budId}`)
-    }
-
-    function addBudget(newBudget){
-      let allBudgets = [...budgets, newBudget]
-      setBudgets(allBudgets)
     }
 
     function handleCreateBudget(e){
@@ -44,13 +45,14 @@ export default function Home({ setUser, user }) {
       fetch('/budgets', {
         method: "POST",
         headers: {"Content-Type": 'application/json'},
-        body: JSON.stringify({ title: input})
+        body: JSON.stringify({ title: input })
       })
       .then((r) => {
         if(r.ok){
           r.json()
-          .then((newBudget) => addBudget(newBudget))
-          
+          .then((newBudget) => {
+            setUser({...user, budgets: [...user.budgets, newBudget]})
+          })
           setInput('')
           toast({
             title: `Created ${input} budget`,
@@ -64,8 +66,22 @@ export default function Home({ setUser, user }) {
       })
     }
 
-    console.log(Boolean(user), user)
-    console.log(budgets)
+    function handleDeleteBudget(budgetId){
+      fetch(`/budgets/${budgetId}`, {
+        method: "DELETE"
+      })
+      .then(() => {
+        const updatedBudgets = user.budgets.filter((budget) => budget.id !== budgetId)
+        setUser({...user, budgets: updatedBudgets})
+        toast({
+          title: 'Deleted Budget',
+          status: "error",
+          position: "top",
+          isClosable: true,
+        })
+        onClose()
+      })
+    }
 
     if (!user) return <Lottie loop={true} animationData={budgetLoading}/>
 
@@ -106,7 +122,7 @@ export default function Home({ setUser, user }) {
                     as={motion.button}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    onClick={onToggle}
+                    onClick={() => setOpen(!open)}
                     colorScheme={'green'}
                     bg={'green.400'}
                     rounded={'full'}
@@ -114,7 +130,7 @@ export default function Home({ setUser, user }) {
                     _hover={{
                       bg: 'green.500',
                     }}>Create Your Budget</Button>
-                <Collapse in={isOpen} animateOpacity>
+                <Collapse in={open} animateOpacity>
                     <Box
                     p='40px'
                     color='gray.500'
@@ -180,9 +196,9 @@ export default function Home({ setUser, user }) {
             <br />
               {user?.budgets.map(bud => (
               <Stack spacing='4'>
-                  <Card variant='outline'>
+                  <Card variant='outline' key={bud.id}>
                     <CardHeader>
-                      <Heading size='md' key={bud.id}>{bud?.title}</Heading>
+                      <Heading size='md'>{bud?.title}</Heading>
                     </CardHeader>
                     <CardBody>
                     <Stack spacing={6} direction={['column', 'row']}
@@ -196,7 +212,33 @@ export default function Home({ setUser, user }) {
                     <Button colorScheme='red'
                           bg={'red.400'}
                           rounded={'full'}
+                          onClick={onOpen}
                           >Delete Budget</Button>
+                    <AlertDialog
+                      isOpen={isOpen}
+                      leastDestructiveRef={cancelRef}
+                      onClose={onClose}
+                      >
+                        <AlertDialogOverlay>
+                          <AlertDialogContent>
+                            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                              Delete Budget
+                            </AlertDialogHeader>
+                            <AlertDialogBody>
+                              Are you sure? You can't undo this action afterwards.
+                            </AlertDialogBody>
+
+                            <AlertDialogFooter>
+                              <Button ref={cancelRef} onClick={onClose}>
+                                Cancel
+                              </Button>
+                              <Button colorScheme='red' onClick={() => handleDeleteBudget(bud.id)} ml={3}>
+                                Delete
+                              </Button>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialogOverlay>
+                      </AlertDialog>
                     </Stack>
                     </CardBody>
                   </Card>

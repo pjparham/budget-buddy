@@ -14,6 +14,7 @@ import {
   Stack,
   useColorMode,
   Center,
+  Tooltip
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { FcMoneyTransfer } from 'react-icons/fc'
@@ -55,17 +56,21 @@ export default function Nav({ user, setUser }) {
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+          <Tooltip label='Home'>
           <Button
             leftIcon={<FcMoneyTransfer size={'3em'}/>}
             variant={'ghost'}
             onClick={() => navigate('/home')}
-          >BudgetBuddy</Button>
-          
+            >BudgetBuddy</Button>
+            </Tooltip>
+            
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
+              <Tooltip label='Toggle Dark/Light Mode'>
               <Button onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
+              </Tooltip>
 
               <Menu>
                 <MenuButton

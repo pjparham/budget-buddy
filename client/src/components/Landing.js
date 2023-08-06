@@ -9,7 +9,6 @@ import {
     useBreakpointValue,
     Icon,
   } from '@chakra-ui/react';
-  import { FcMoneyTransfer, FcCalculator } from 'react-icons/fc'
   import { useState } from 'react'
   import Signup from './Signup'
   import Login from './Login'
@@ -30,7 +29,6 @@ import {
         [e.target.name]: e.target.value,
       })
     }
-
 
     return (
       <Box position={'relative'}>
