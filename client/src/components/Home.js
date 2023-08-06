@@ -185,11 +185,19 @@ export default function Home({ setUser, user }) {
                       <Heading size='md' key={bud.id}>{bud?.title}</Heading>
                     </CardHeader>
                     <CardBody>
+                    <Stack spacing={6} direction={['column', 'row']}
+                           justifyContent={"center"}
+                           >
                     <Button colorScheme='green'
                           bg={'green.400'}
                           rounded={'full'}
                           onClick={() => budgetLink(bud.id)}
                           >View Details</Button>
+                    <Button colorScheme='red'
+                          bg={'red.400'}
+                          rounded={'full'}
+                          >Delete Budget</Button>
+                    </Stack>
                     </CardBody>
                   </Card>
                   <br />

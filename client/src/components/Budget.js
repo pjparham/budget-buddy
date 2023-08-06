@@ -53,11 +53,15 @@ const Budget = ({ setUser, user }) => {
       }
     }
 
-    const totalTransactions = transactions?.reduce((accumulator, currentValue) => {
+    const totalExpenses = categories?.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.amount;
     }, 0)
 
-    console.log(categories)
+    const totalIncome = budget?.incomes.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.amount;
+    }, 0)
+
+    const progressBar = 100 - (budget?.remaining_amount / totalIncome) * 100
 
   return (
     <>
@@ -81,18 +85,17 @@ const Budget = ({ setUser, user }) => {
     <Reorder.Group axis='x' values={items} onReorder={setItems}>
     <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
                 justifyContent={"center"}
-                alignContent={"center"}
                 display={"flex"}
-                flexWrap={"wrap"}
                 mb={'4'}>
         <Reorder.Item key={items[0]} value={setItems}>
         <Card>
           <CardHeader>
             <Heading size='md'>Total Spent</Heading>
+            <Text>${totalExpenses}</Text>
           </CardHeader>
           <CardBody>
-            <Progress value={totalTransactions} colorScheme='green' size='sm' mb={'2'} />
-            <Text>{totalTransactions}</Text>
+            <Progress hasStripe value={progressBar} colorScheme='green' size='sm' mb={'2'} />
+            <Text>Remaining: ${budget?.remaining_amount}</Text>
           </CardBody>
         <CardFooter>
           <Button colorScheme='red'
