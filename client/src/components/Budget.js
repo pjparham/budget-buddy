@@ -34,12 +34,37 @@ const Budget = ({ setUser, user }) => {
     "amount": "",
     "budget_id": id
   })
-
+  console.log(transactions)
   const [incomeForm, setIncomeForm] = useState({
     "title": "",
     "amount": "",
     "budget_id": id
   })
+
+  function handleDeleteExpense(deletedExpense){
+    let allIncomes = transactions.filter((transaction) => !transaction.category_id)
+    let allExpenses = transactions.filter((transaction) => transaction.category_id)
+    console.log(allIncomes, allExpenses)
+    let updatedExpenses = allExpenses.filter((expense) => expense.id != deletedExpense.id)
+    console.log(updatedExpenses, 'updated expenses')
+    let updatedTransactions = [incomes, updatedExpenses]
+    console.log(updatedTransactions)
+    setTransactions(updatedTransactions)
+  }
+
+  function handleDeleteIncome(deletedIncome){
+    let incomes = transactions.filter((transaction) => !transaction.category_id)
+    let expenses = transactions.filter((transaction) => transaction.category_id)
+    let updatedIncomes = incomes.filter((income) => income.id != deletedIncome.id)
+    let updatedTransactions =[expenses, updatedIncomes]
+    setTransactions(updatedTransactions.flat())
+    let newRemainingAmount = remainingAmount - deletedIncome.amount
+    setRemainingAmount(newRemainingAmount)
+  }
+  console.log(transactions)
+
+  //   let testing = transactions.filter((transaction) => !transaction.category_id)
+  // console.log(testing)
 
   // change functions for forms
   function handleCategoryFormChange(e){
@@ -284,7 +309,7 @@ const Budget = ({ setUser, user }) => {
       </Reorder.Item>
     </SimpleGrid>
     </Reorder.Group>
-  <BudgetTable transactions={transactions}/>
+  <BudgetTable transactions={transactions} handleDeleteExpense={handleDeleteExpense} handleDeleteIncome={handleDeleteIncome} toast={toast}/>
     </>
   )
 }
