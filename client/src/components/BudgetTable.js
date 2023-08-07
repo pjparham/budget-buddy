@@ -10,13 +10,15 @@ import {
   IconButton, } from '@chakra-ui/react'
 import { BsTrash3Fill } from 'react-icons/bs'
 
-export default function BudgetTable( {transactions }) {
+export default function BudgetTable( { transactions }) {
   const [sortedTransactions, setSortedTransactions] = useState([]);
 
   useEffect(() => {
     const sorted = [...transactions].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     setSortedTransactions(sorted);
   }, [transactions]);
+
+  console.log(sortedTransactions)
 
   return (
     <> 
@@ -38,7 +40,7 @@ export default function BudgetTable( {transactions }) {
               <Td color={transaction.category_id ? "red.600" : "green.700"}>{transaction.amount}</Td>
               <Td><IconButton
                       colorScheme='red'
-                      bg={'red.200'}
+                      bg={'red.400'}
                       icon={<BsTrash3Fill />}
                       /></Td>
           </Tr>
