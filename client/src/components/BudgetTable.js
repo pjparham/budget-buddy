@@ -21,7 +21,7 @@ export default function BudgetTable( {transactions }) {
   return (
     <> 
       <TableContainer>
-        <Table variant='simple'>
+        <Table variant='striped'>
           <Thead>
             <Tr>
               <Th>Name</Th>
