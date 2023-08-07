@@ -23,17 +23,34 @@ const Budget = ({ setUser, user }) => {
   const [budget, setBudget] = useState();
   const [categories, setCategories] = useState();
   const [transactions, setTransactions] = useState([]);
+  const [incomes, setIncomes] = useState([])
   const [items, setItems] = useState([0, 1, 2, 3]);
 
+
+  //state for forms
   const [categoryForm, setCategoryForm] = useState({
     "title": "",
     "amount": "",
     "budget_id": id
   })
 
+  const [incomeForm, setIncomeForm] = useState({
+    "title": "",
+    "amount": "",
+    "budget_id": id
+  })
+
+  // change functions for forms
   function handleCategoryFormChange(e){
     setCategoryForm({
       ...categoryForm,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  function handleIncomeFormChange(e){
+    setIncomeForm({
+      ...incomeForm,
       [e.target.name]: e.target.value,
     })
   }
@@ -48,6 +65,7 @@ const Budget = ({ setUser, user }) => {
       if(budget) {
         updateCategories()
         updateTransactions()
+        updateIncomes()
       }
     }, [budget]);
 
@@ -55,9 +73,18 @@ const Budget = ({ setUser, user }) => {
       setCategories(budget.categories)
     }
 
+    function updateIncomes(){
+      setIncomes(budget.incomes)
+    }
+
     function addCategory(newCategory){
       let allCategories = [...categories, newCategory]
       setCategories(allCategories)
+    }
+
+    function addIncome(newIncome){
+      let allIncomes = [...incomes, newIncome]
+      setIncomes(allIncomes)
     }
 
     function updateTransactions() {
@@ -102,11 +129,40 @@ const Budget = ({ setUser, user }) => {
       })
     }
 
+    function postIncome(e){
+      e.preventDefault()
+      fetch('/incomes', {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(incomeForm)
+      })
+      .then((r) => {
+        if(r.ok){
+          r.json()
+          .then((newIncome) => addIncome(newIncome))
+          setIncomeForm({
+            "title": "",
+            "amount": "",
+            "budget_id": id
+          })
+        } else{
+          r.json().then(e =>
+            toast({
+              title: `${r.status} ${e.error}`,
+              status: "error",
+              position: "top",
+              isClosable: true,
+            })
+            )
+        }
+      })
+    }
+
     const totalExpenses = categories?.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.amount;
     }, 0)
 
-    const totalIncome = budget?.incomes.reduce((accumulator, currentValue) => {
+    const totalIncome = incomes?.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.amount;
     }, 0)
 
@@ -172,6 +228,7 @@ const Budget = ({ setUser, user }) => {
                     bg={'green.400'}
                     rounded={'full'}
                     leftIcon={<IoMdAdd/>}
+                    onClick={postCategory}
                     >Add Category</Button>
           </CardFooter>
         </Card>
@@ -183,15 +240,16 @@ const Budget = ({ setUser, user }) => {
           </CardHeader>
           <CardBody>
             <Text>Income Name</Text>
-            <Input placeholder="Income Name" />
+            <Input placeholder="Income Name" name="title" value={incomeForm.title} onChange={handleIncomeFormChange} />
             <Text>Amount</Text>
-            <Input placeholder="Amount" /> 
+            <Input placeholder="Amount" name="amount" value={incomeForm.amount} onChange={handleIncomeFormChange}/> 
           </CardBody>
           <CardFooter justifyContent='center'>
             <Button colorScheme='green'
                     bg={'green.400'}
                     rounded={'full'}
                     leftIcon={<IoMdAdd/>}
+                    onClick={postIncome}
                     >Add Income</Button>
           </CardFooter>
         </Card>

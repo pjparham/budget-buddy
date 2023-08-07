@@ -18,7 +18,7 @@ export default function BudgetTable( { transactions }) {
     setSortedTransactions(sorted);
   }, [transactions]);
 
-  console.log(sortedTransactions)
+  // console.log(sortedTransactions)
 
   return (
     <> 
