@@ -56,6 +56,7 @@ const Budget = ({ setUser, user }) => {
     })
   }
 
+
     useEffect(() => {
         fetch(`/budgets/${id}`)
         .then(res => res.json())
@@ -105,7 +106,7 @@ const Budget = ({ setUser, user }) => {
         setTransactions(allTransactions.flat());
       }
     }
-
+    
     function postCategory(e){
       e.preventDefault()
       fetch('/categories', {
@@ -207,7 +208,7 @@ const Budget = ({ setUser, user }) => {
           </CardHeader>
             <CardBody>
               <Progress hasStripe value={progressBar} colorScheme='green' size='sm' mb={'2'} />
-              <Text>Remaining: ${budget?.remaining_amount}</Text>
+              <Text>Remaining: ${budget ? remainingAmount : null}</Text>
             </CardBody>
             <CardFooter>
               <Button colorScheme='red'

@@ -159,6 +159,7 @@ class Incomes(Resource):
         title = data.get('title')
         amount = data.get('amount')
         budget_id = data.get('budget_id')
+        float_amount = float(amount)
 
         budget = Budget.query.get(budget_id)
         if not budget:
@@ -167,10 +168,10 @@ class Incomes(Resource):
         
         try:
             with db.session.begin_nested():  
-                new_income = Income(title=title, amount=amount, budget=budget)
+                new_income = Income(title=title, amount=float_amount, budget=budget)
                 db.session.add(new_income)
                 db.session.flush()  # Flush the session to get the new_income.id
-                budget.remaining_amount += amount
+                budget.remaining_amount += float_amount
 
             db.session.commit()  
 
@@ -213,6 +214,7 @@ class Categories(Resource):
         title = data.get('title')
         amount = data.get('amount')
         budget_id = data.get('budget_id')
+        float_amount = float(amount)
 
         budget = Budget.query.get(budget_id)
         if not budget:
@@ -221,16 +223,19 @@ class Categories(Resource):
         
         try:
             with db.session.begin_nested():  
-                new_category = Category(title=title, amount=amount, budget=budget)
+                new_category = Category(title=title, amount=float_amount, budget=budget)
                 db.session.add(new_category)
                 db.session.flush()  # Flush the session to get the new_income.id
-                budget.remaining_amount -= amount
+                print('hello')
+                budget.remaining_amount -= float_amount
+                print('goodbye')
 
             db.session.commit()  
 
             return make_response(jsonify(new_category.to_dict()), 201)
 
         except Exception as e:
+            print(e)
             db.session.rollback()
             return make_response(jsonify({'error': 'An error occurred while adding this category'}), 500)
         
