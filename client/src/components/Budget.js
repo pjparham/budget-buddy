@@ -219,9 +219,9 @@ const Budget = ({ setUser, user }) => {
           </CardHeader>
           <CardBody>
             <Text>Category Name</Text>
-            <Input placeholder="Category Name" name="title" value={categoryForm.title} onChange={handleCategoryFormChange}/>
+            <Input placeholder="e.g. Groceries" name="title" value={categoryForm.title} onChange={handleCategoryFormChange}/>
             <Text>Amount</Text>
-            <Input placeholder="Amount" name="amount" value={categoryForm.amount} onChange={handleCategoryFormChange}/> 
+            <Input placeholder="e.g. 350" name="amount" value={categoryForm.amount} onChange={handleCategoryFormChange}/> 
           </CardBody>
           <CardFooter justifyContent='center'>
           <Button colorScheme='green'
@@ -240,9 +240,9 @@ const Budget = ({ setUser, user }) => {
           </CardHeader>
           <CardBody>
             <Text>Income Name</Text>
-            <Input placeholder="Income Name" name="title" value={incomeForm.title} onChange={handleIncomeFormChange} />
+            <Input placeholder="e.g. First Paycheck" name="title" value={incomeForm.title} onChange={handleIncomeFormChange} />
             <Text>Amount</Text>
-            <Input placeholder="Amount" name="amount" value={incomeForm.amount} onChange={handleIncomeFormChange}/> 
+            <Input placeholder="e.g. 1000" name="amount" value={incomeForm.amount} onChange={handleIncomeFormChange}/> 
           </CardBody>
           <CardFooter justifyContent='center'>
             <Button colorScheme='green'
@@ -261,9 +261,9 @@ const Budget = ({ setUser, user }) => {
         </CardHeader>
         <CardBody>
         <Text>Expense Name</Text>
-          <Input placeholder="Expense Name" />
+          <Input placeholder="e.g. Coffee" />
           <Text>Amount</Text>
-          <Input placeholder="Amount" /> 
+          <Input placeholder="e.g. 3.50" /> 
         </CardBody>
         <CardFooter justifyContent='center'>
           <Button colorScheme='green'
