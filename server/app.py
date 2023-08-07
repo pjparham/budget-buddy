@@ -196,7 +196,6 @@ class Incomes(Resource):
                 if budget.remaining_amount < income.amount:
                     return make_response(jsonify({'error': 'Deleting this income would result in negative remaining amount'}), 400)
 
-
                 budget.remaining_amount -= income.amount
                 db.session.delete(income)
 
@@ -225,6 +224,9 @@ class Categories(Resource):
         if not budget:
             return make_response(jsonify({'error': 'Budget not found'}), 404)
         
+        if budget.remaining_amount < float_amount:
+            return make_response(jsonify({'error': 'Adding this category would result in negative remaining amount'}), 400)
+        
         
         try:
             with db.session.begin_nested():  
@@ -245,6 +247,32 @@ class Categories(Resource):
             return make_response(jsonify({'error': 'An error occurred while adding this category'}), 500)
         
 api.add_resource(Categories, '/categories', '/categories/<int:category_id>')
+
+class Expenses(Resource):
+    def post(self):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+    def delete(self, expense_id):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        expense = Expense.query.get(expense_id)
+        if not expense:
+            return make_response(jsonify({'error': 'Expense not found'}), 404)
+        
+ 
+        try:
+            db.session.delete(expense)
+            db.session.commit() 
+
+            return make_response(jsonify({'message': 'Expense deleted successfully'}), 200)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while deleting the expense'}), 500)
+
+api.add_resource(Expenses, '/expenses', '/expenses/<int:expense_id>')
 
 
 class Login(Resource):
