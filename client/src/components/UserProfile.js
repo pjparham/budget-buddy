@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from './Navbar'
 import {
   Button,
@@ -9,15 +9,69 @@ import {
   Input,
   Stack,
   useColorModeValue,
-  HStack,
   Avatar,
   AvatarBadge,
   IconButton,
   Center,
+  InputRightElement,
+  InputGroup,
+  useToast
 } from '@chakra-ui/react'
 import { SmallCloseIcon } from '@chakra-ui/icons'
 
-export default function UserProfileEdit({ user, setUser}) {
+export default function UserProfileEdit({ user, setUser }) {
+  const [userForm, setUserForm] = useState({
+    "name": user?.name,
+    "email": user?.email,
+    "password": user?.password
+  })
+  const [show, setShow] = useState(false)
+  const toast = useToast()
+
+  function handleChange(e){
+    setUserForm({
+      ...userForm,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  function clearForm(){
+    setUserForm({
+      "name": "",
+      "email": "",
+      "password": ""
+    })
+  }
+
+  function handleUpdateUser(e){
+    e.preventDefault()
+    fetch(`/users/${user.id}`, {
+      method: "PATCH",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(userForm)
+    })
+    .then(res => {
+      if (res.ok){
+          res.json().then(setUser)
+          toast({
+            title: "User Info Updated!",
+            status: "success",
+            position: "top",
+            isClosable: true,
+          })
+      } else {
+        res.json().then(e =>
+        toast({
+          title: `${res.status} ${e.error}`,
+          status: "error",
+          position: "top",
+          isClosable: true,
+        })
+        )
+      }
+    })
+    }
+
   return (
     <>
       <Navbar setUser={setUser} user={user}/>
@@ -59,10 +113,13 @@ export default function UserProfileEdit({ user, setUser}) {
             </Center>
           </Stack>
         </FormControl>
+        <form onSubmit={handleUpdateUser}>
         <FormControl id="userName" isRequired>
           <FormLabel>User name</FormLabel>
           <Input
-            placeholder="UserName"
+            name='name'
+            value={userForm.name}
+            onChange={handleChange}
             _placeholder={{ color: 'gray.500' }}
             type="text"
           />
@@ -70,21 +127,37 @@ export default function UserProfileEdit({ user, setUser}) {
         <FormControl id="email" isRequired>
           <FormLabel>Email address</FormLabel>
           <Input
-            placeholder="your-email@example.com"
-            _placeholder={{ color: 'gray.500' }}
-            type="email"
+           name='email'
+           value={userForm.email}
+           onChange={handleChange}
+           _placeholder={{ color: 'gray.500' }}
+           type="email"
           />
         </FormControl>
         <FormControl id="password" isRequired>
           <FormLabel>Password</FormLabel>
+          <InputGroup>
           <Input
-            placeholder="password"
+            name='password'
+            value={userForm.password}
+            onChange={handleChange}
             _placeholder={{ color: 'gray.500' }}
-            type="password"
+            type={show ? "text" : "password"}
+            mb={4}
           />
+          <InputRightElement width="4.5rem">
+            <Button h="1.75rem" size="sm" bg={'black'} 
+                    color={'white'}
+                    _hover={{bg: 'gray.500'}}
+                    onClick={() => setShow(!show)}>
+              {show ? "Hide" : "Show"}
+            </Button>
+          </InputRightElement>
+          </InputGroup>
         </FormControl>
         <Stack spacing={6} direction={['column', 'row']}>
           <Button
+            onClick={clearForm}
             bg={'red.400'}
             color={'white'}
             w="full"
@@ -94,6 +167,7 @@ export default function UserProfileEdit({ user, setUser}) {
             Cancel
           </Button>
           <Button
+            type='submit'
             bg={'blue.400'}
             color={'white'}
             w="full"
@@ -103,6 +177,7 @@ export default function UserProfileEdit({ user, setUser}) {
             Submit
           </Button>
         </Stack>
+        </form>
       </Stack>
     </Flex>
     </>
