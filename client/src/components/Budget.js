@@ -176,6 +176,8 @@ const Budget = ({ setUser, user }) => {
 
     const progressBar = 100 - (remainingAmount / totalIncome) * 100
 
+    console.log(transactions)
+
   return (
     <>
     <Navbar setUser={setUser} user={user}/>
@@ -194,7 +196,8 @@ const Budget = ({ setUser, user }) => {
         {budget?.title} Overview
         </Text>
     </Heading>
-    <BudgetChart budget={budget} categories={categories}/>
+    <br />
+    {categories?.title ? <BudgetChart budget={budget} categories={categories}/> : null}
     <Reorder.Group axis='x' values={items} onReorder={setItems}>
     <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
                 justifyContent={"center"}
@@ -208,7 +211,7 @@ const Budget = ({ setUser, user }) => {
             <Text>${totalExpenses}</Text>
           </CardHeader>
             <CardBody>
-              <Progress hasStripe value={progressBar} colorScheme='green' size='sm' mb={'2'} />
+              <Progress hasStripe value={totalIncome === 0 ? 0 : progressBar} colorScheme='green' size='sm' mb={'2'} />
               <Text>Remaining: ${budget ? remainingAmount : null}</Text>
             </CardBody>
             <CardFooter>
@@ -284,7 +287,7 @@ const Budget = ({ setUser, user }) => {
       </Reorder.Item>
     </SimpleGrid>
     </Reorder.Group>
-  <BudgetTable transactions={transactions}/>
+    {transactions.length === 0 ? null : <BudgetTable transactions={transactions}/>}
     </>
   )
 }
