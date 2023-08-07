@@ -11,17 +11,32 @@ import { Card,
          CardFooter,
          SimpleGrid,
          Button,
-         Input, } from '@chakra-ui/react'
+         Input,
+         useToast } from '@chakra-ui/react'
 import { BsTrash3Fill } from 'react-icons/bs'
 import { IoMdAdd } from 'react-icons/io'
 
 const Budget = ({ setUser, user }) => {
+  const { id } = useParams()
+  const toast = useToast()
+
   const [budget, setBudget] = useState();
   const [categories, setCategories] = useState();
   const [transactions, setTransactions] = useState([]);
   const [items, setItems] = useState([0, 1, 2, 3]);
 
-  const { id } = useParams()
+  const [categoryForm, setCategoryForm] = useState({
+    "title": "",
+    "amount": "",
+    "budget_id": id
+  })
+
+  function handleCategoryFormChange(e){
+    setCategoryForm({
+      ...categoryForm,
+      [e.target.name]: e.target.value,
+    })
+  }
 
     useEffect(() => {
         fetch(`/budgets/${id}`)
@@ -40,6 +55,11 @@ const Budget = ({ setUser, user }) => {
       setCategories(budget.categories)
     }
 
+    function addCategory(newCategory){
+      let allCategories = [...categories, newCategory]
+      setCategories(allCategories)
+    }
+
     function updateTransactions() {
       if (categories) {
         let allTransactions = [];
@@ -51,6 +71,35 @@ const Budget = ({ setUser, user }) => {
     
         setTransactions(allTransactions.flat());
       }
+    }
+
+    function postCategory(e){
+      e.preventDefault()
+      fetch('/categories', {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(categoryForm)
+      })
+      .then((r) => {
+        if(r.ok){
+          r.json()
+          .then((newCategory) => addCategory(newCategory))
+          setCategoryForm({
+            "title": "",
+            "amount": "",
+            "budget_id": id
+          })
+        } else{
+          r.json().then(e =>
+            toast({
+              title: `${r.status} ${e.error}`,
+              status: "error",
+              position: "top",
+              isClosable: true,
+            })
+            )
+        }
+      })
     }
 
     const totalExpenses = categories?.reduce((accumulator, currentValue) => {
@@ -88,64 +137,64 @@ const Budget = ({ setUser, user }) => {
                 display={"flex"}
                 flexWrap={"wrap"}
                 mb={'4'}>
-        <Reorder.Item key={items[0]} value={items[0]}>
+      <Reorder.Item key={items[0]} value={items[0]}>
         <Card>
           <CardHeader>
             <Heading size='md'>Total Spent</Heading>
             <Text>${totalExpenses}</Text>
           </CardHeader>
-          <CardBody>
-            <Progress hasStripe value={progressBar} colorScheme='green' size='sm' mb={'2'} />
-            <Text>Remaining: ${budget?.remaining_amount}</Text>
-          </CardBody>
-        <CardFooter>
-          <Button colorScheme='red'
-                  bg={'red.400'}
-                  rounded={'full'}
-                  leftIcon={<BsTrash3Fill/>}
-                  >Delete Budget</Button>
-        </CardFooter>
-        </Card>
+            <CardBody>
+              <Progress hasStripe value={progressBar} colorScheme='green' size='sm' mb={'2'} />
+              <Text>Remaining: ${budget?.remaining_amount}</Text>
+            </CardBody>
+            <CardFooter>
+              <Button colorScheme='red'
+                      bg={'red.400'}
+                      rounded={'full'}
+                      leftIcon={<BsTrash3Fill/>}
+                      >Delete Budget</Button>
+            </CardFooter>
+          </Card>
       </Reorder.Item>
       <Reorder.Item key={items[1]} value={items[1]}>
-      <Card>
-        <CardHeader>
-          <Heading size='md'>Add New Category</Heading>
-        </CardHeader>
-        <CardBody>
-          <Text>Category Name</Text>
-          <Input placeholder="Expense Name" />
-          <Text>Amount</Text>
-          <Input placeholder="Amount" /> 
-        </CardBody>
-        <CardFooter justifyContent='center'>
-        <Button colorScheme='green'
-                  bg={'green.400'}
-                  rounded={'full'}
-                  leftIcon={<IoMdAdd/>}
-                  >Add Category</Button>
-        </CardFooter>
-      </Card>
+        <Card>
+          <CardHeader>
+            <Heading size='md'>Add New Category</Heading>
+          </CardHeader>
+          <CardBody>
+            <Text>Category Name</Text>
+            <Input placeholder="Category Name" name="title" value={categoryForm.title} onChange={handleCategoryFormChange}/>
+            <Text>Amount</Text>
+            <Input placeholder="Amount" name="amount" value={categoryForm.amount} onChange={handleCategoryFormChange}/> 
+          </CardBody>
+          <CardFooter justifyContent='center'>
+          <Button colorScheme='green'
+                    bg={'green.400'}
+                    rounded={'full'}
+                    leftIcon={<IoMdAdd/>}
+                    >Add Category</Button>
+          </CardFooter>
+        </Card>
       </Reorder.Item>
       <Reorder.Item key={items[2]} value={items[2]}>
-      <Card>
-        <CardHeader>
-          <Heading size='md'>Add Income</Heading>
-        </CardHeader>
-        <CardBody>
-          <Text>Income Name</Text>
-          <Input placeholder="Income Name" />
-          <Text>Amount</Text>
-          <Input placeholder="Amount" /> 
-        </CardBody>
-        <CardFooter justifyContent='center'>
-          <Button colorScheme='green'
-                  bg={'green.400'}
-                  rounded={'full'}
-                  leftIcon={<IoMdAdd/>}
-                  >Add Income</Button>
-        </CardFooter>
-      </Card>
+        <Card>
+          <CardHeader>
+            <Heading size='md'>Add Income</Heading>
+          </CardHeader>
+          <CardBody>
+            <Text>Income Name</Text>
+            <Input placeholder="Income Name" />
+            <Text>Amount</Text>
+            <Input placeholder="Amount" /> 
+          </CardBody>
+          <CardFooter justifyContent='center'>
+            <Button colorScheme='green'
+                    bg={'green.400'}
+                    rounded={'full'}
+                    leftIcon={<IoMdAdd/>}
+                    >Add Income</Button>
+          </CardFooter>
+        </Card>
       </Reorder.Item>
       <Reorder.Item key={items[3]} value={items[3]}>
       <Card>
