@@ -56,7 +56,6 @@ const Budget = ({ setUser, user }) => {
     })
   }
 
-
     useEffect(() => {
         fetch(`/budgets/${id}`)
         .then(res => res.json())
@@ -92,6 +91,8 @@ const Budget = ({ setUser, user }) => {
       setIncomes(allIncomes)
       let newRemainingAmount = remainingAmount + newIncome.amount
       setRemainingAmount(newRemainingAmount)
+      let allTransactions = [...transactions, newIncome]
+      setTransactions(allTransactions)
     }
 
     function updateTransactions() {
