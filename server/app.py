@@ -192,6 +192,11 @@ class Incomes(Resource):
         try:
             with db.session.begin_nested():  
                 budget = income.budget
+                
+                if budget.remaining_amount < income.amount:
+                    return make_response(jsonify({'error': 'Deleting this income would result in negative remaining amount'}), 400)
+
+
                 budget.remaining_amount -= income.amount
                 db.session.delete(income)
 

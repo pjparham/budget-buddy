@@ -10,15 +10,43 @@ import {
   IconButton, } from '@chakra-ui/react'
 import { BsTrash3Fill } from 'react-icons/bs'
 
-export default function BudgetTable( { transactions }) {
+export default function BudgetTable( { transactions, handleDeleteExpense, handleDeleteIncome, toast }) {
   const [sortedTransactions, setSortedTransactions] = useState([]);
 
   useEffect(() => {
-    const sorted = [...transactions].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const sorted = transactions?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     setSortedTransactions(sorted);
   }, [transactions]);
 
-  // console.log(sortedTransactions)
+
+  function onDeleteTransaction(transaction){
+    //this checks if it's income or expense
+    if (transaction.category_id){  //expenses 
+      console.log('this is an expense')
+    } else{ //incomes
+      // console.log(transaction)
+      fetch(`/incomes/${transaction.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json"}
+      })
+      .then((r) => {
+        if(r.ok){
+          r.json()
+          handleDeleteIncome(transaction)
+        } else{
+          r.json().then(e =>
+            toast({
+              title: `${r.status} ${e.error}`,
+              status: "error",
+              position: "top",
+              isClosable: true,
+            })
+            )
+        }
+      })
+    }
+  }
+
 
   return (
     <> 
@@ -42,6 +70,7 @@ export default function BudgetTable( { transactions }) {
                       colorScheme='red'
                       bg={'red.400'}
                       icon={<BsTrash3Fill />}
+                      onClick={() => onDeleteTransaction(transaction)}
                       /></Td>
           </Tr>
               )}
