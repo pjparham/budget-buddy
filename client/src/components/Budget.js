@@ -24,6 +24,7 @@ const Budget = ({ setUser, user }) => {
   const [categories, setCategories] = useState();
   const [transactions, setTransactions] = useState([]);
   const [incomes, setIncomes] = useState([])
+  const [remainingAmount, setRemainingAmount] = useState()
   const [items, setItems] = useState([0, 1, 2, 3]);
 
 
@@ -66,6 +67,7 @@ const Budget = ({ setUser, user }) => {
         updateCategories()
         updateTransactions()
         updateIncomes()
+        setRemainingAmount(budget.remaining_amount)
       }
     }, [budget]);
 
@@ -80,11 +82,15 @@ const Budget = ({ setUser, user }) => {
     function addCategory(newCategory){
       let allCategories = [...categories, newCategory]
       setCategories(allCategories)
+      let newRemainingAmount = remainingAmount - newCategory.amount
+      setRemainingAmount(newRemainingAmount)
     }
 
     function addIncome(newIncome){
       let allIncomes = [...incomes, newIncome]
       setIncomes(allIncomes)
+      let newRemainingAmount = remainingAmount + newIncome.amount
+      setRemainingAmount(newRemainingAmount)
     }
 
     function updateTransactions() {
@@ -166,7 +172,7 @@ const Budget = ({ setUser, user }) => {
       return accumulator + currentValue.amount;
     }, 0)
 
-    const progressBar = 100 - (budget?.remaining_amount / totalIncome) * 100
+    const progressBar = 100 - (remainingAmount / totalIncome) * 100
 
   return (
     <>
