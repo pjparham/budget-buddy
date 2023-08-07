@@ -204,6 +204,38 @@ class Incomes(Resource):
 
 api.add_resource(Incomes, '/incomes', '/incomes/<int:income_id>')
 
+class Categories(Resource):
+    def post(self):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        data = request.get_json()
+        title = data.get('title')
+        amount = data.get('amount')
+        budget_id = data.get('budget_id')
+
+        budget = Budget.query.get(budget_id)
+        if not budget:
+            return make_response(jsonify({'error': 'Budget not found'}), 404)
+        
+        
+        try:
+            with db.session.begin_nested():  
+                new_category = Category(title=title, amount=amount, budget=budget)
+                db.session.add(new_category)
+                db.session.flush()  # Flush the session to get the new_income.id
+                budget.remaining_amount -= amount
+
+            db.session.commit()  
+
+            return make_response(jsonify(new_category.to_dict()), 201)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while adding this category'}), 500)
+        
+api.add_resource(Categories, '/categories', '/categories/<int:category_id>')
+
 
 class Login(Resource):
     def post(self):
