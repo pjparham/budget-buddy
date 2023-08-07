@@ -37,6 +37,8 @@ export default function BudgetTable( {transactions }) {
               <Td>{transaction.created_at}</Td>
               <Td color={transaction.category_id ? "red.600" : "green.700"}>{transaction.amount}</Td>
               <Td><IconButton
+                      colorScheme='red'
+                      bg={'red.200'}
                       icon={<BsTrash3Fill />}
                       /></Td>
           </Tr>
