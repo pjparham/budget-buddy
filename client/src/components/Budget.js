@@ -1,11 +1,12 @@
 import { motion, Reorder } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Heading, Progress, Text } from '@chakra-ui/react'
 import BudgetChart from './BudgetChart'
 import BudgetTable from './BudgetTable'
 import Navbar from './Navbar'
-import { Card,
+import { Heading,
+         Text,
+         Card,
          CardHeader,
          CardBody,
          CardFooter,
@@ -14,7 +15,7 @@ import { Card,
          Input,
          Select,
          useToast } from '@chakra-ui/react'
-import { BsTrash3Fill } from 'react-icons/bs'
+
 import { IoMdAdd } from 'react-icons/io'
 
 const Budget = ({ setUser, user }) => {
@@ -191,10 +192,6 @@ const Budget = ({ setUser, user }) => {
       })
     }
 
-    const totalExpenses = categories?.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.amount;
-    }, 0)
-
     const totalIncome = incomes?.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.amount;
     }, 0)
@@ -213,15 +210,19 @@ const Budget = ({ setUser, user }) => {
             exit={{ opacity: 0, y: -100 }}
             fontWeight={600}
             fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' }}
+            mb={'25'}
             lineHeight={'110%'}>
         <Text as={'span'} 
             bgGradient="linear(to-r, green.400,green.700)"
-            bgClip="text">
+            bgClip="text"
+            >
         <br />
         {budget?.title} Overview
         </Text>
     </Heading>
-    {categories?.length === 0 ? null : <BudgetChart budget={budget} categories={categories}/>}
+
+    {categories?.length === 0 ? null : <BudgetChart budget={budget} categories={categories} progressBar={progressBar} transactions={transactions} remainingAmount={remainingAmount} incomes={incomes}/>}
+    
     <Reorder.Group axis='x' values={items} onReorder={setItems}>
     <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
                 justifyContent={"center"}
@@ -229,23 +230,6 @@ const Budget = ({ setUser, user }) => {
                 flexWrap={"wrap"}
                 mb={'4'}>
       <Reorder.Item key={items[0]} value={items[0]}>
-        <Card>
-          <CardHeader>
-            <Heading size='md'>Total Spent</Heading>
-            <Text>${totalExpenses}</Text>
-          </CardHeader>
-            <CardBody>
-              <Progress hasStripe value={!transactions || !categories || !incomes ? 0 : progressBar} colorScheme='green' size='sm' mb={'2'} />
-              <Text>Remaining: ${budget ? remainingAmount : null}</Text>
-            </CardBody>
-            <CardFooter>
-              <Button colorScheme='red'
-                      bg={'red.400'}
-                      rounded={'full'}
-                      leftIcon={<BsTrash3Fill/>}
-                      >Delete Budget</Button>
-            </CardFooter>
-          </Card>
       </Reorder.Item>
       <Reorder.Item key={items[1]} value={items[1]}>
         <Card>
