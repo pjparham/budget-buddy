@@ -12,6 +12,7 @@ import { Card,
          SimpleGrid,
          Button,
          Input,
+         Select,
          useToast } from '@chakra-ui/react'
 import { BsTrash3Fill } from 'react-icons/bs'
 import { IoMdAdd } from 'react-icons/io'
@@ -61,7 +62,6 @@ const Budget = ({ setUser, user }) => {
     let newRemainingAmount = remainingAmount - deletedIncome.amount
     setRemainingAmount(newRemainingAmount)
   }
-  console.log(transactions)
 
   //   let testing = transactions.filter((transaction) => !transaction.category_id)
   // console.log(testing)
@@ -201,7 +201,7 @@ const Budget = ({ setUser, user }) => {
 
     const progressBar = 100 - (remainingAmount / totalIncome) * 100
 
-    console.log(transactions, categories, incomes)
+    console.log(categories)
 
   return (
     <>
@@ -298,7 +298,14 @@ const Budget = ({ setUser, user }) => {
         <Text>Expense Name</Text>
           <Input placeholder="e.g. Coffee" />
           <Text>Amount</Text>
-          <Input placeholder="e.g. 3.50" /> 
+          <Input placeholder="e.g. 3.50" mb={2} /> 
+          {categories?.length === 0 ? <Text>Create Category First!</Text> : 
+          <>
+          <Text>Category</Text>
+            <Select>
+            {categories?.map(category => (<option key={category.id} value={category.id}>{category.title}</option>))}
+          </Select>
+          </>}
         </CardBody>
         <CardFooter justifyContent='center'>
           <Button colorScheme='green'
