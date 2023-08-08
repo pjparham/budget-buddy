@@ -232,10 +232,8 @@ class Categories(Resource):
             with db.session.begin_nested():  
                 new_category = Category(title=title, amount=float_amount, budget=budget)
                 db.session.add(new_category)
-                db.session.flush()  # Flush the session to get the new_income.id
-                print('hello')
+                db.session.flush()
                 budget.remaining_amount -= float_amount
-                print('goodbye')
 
             db.session.commit()  
 

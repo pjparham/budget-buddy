@@ -23,7 +23,7 @@ const Budget = ({ setUser, user }) => {
   const toast = useToast()
 
   const [budget, setBudget] = useState();
-  const [categories, setCategories] = useState();
+  const [categories, setCategories] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [incomes, setIncomes] = useState([])
   const [remainingAmount, setRemainingAmount] = useState()
@@ -36,12 +36,52 @@ const Budget = ({ setUser, user }) => {
     "amount": "",
     "budget_id": id
   })
-  console.log(transactions)
+
   const [incomeForm, setIncomeForm] = useState({
     "title": "",
     "amount": "",
     "budget_id": id
   })
+
+  const [expenseForm, setExpenseForm] = useState({
+    "title": "",
+    "amount": "",
+    "category_id": "",
+  })
+
+    // change functions for forms
+  function handleCategoryFormChange(e){
+      setCategoryForm({
+        ...categoryForm,
+        [e.target.name]: e.target.value,
+      })
+    }
+  
+  function handleIncomeFormChange(e){
+      setIncomeForm({
+        ...incomeForm,
+        [e.target.name]: e.target.value,
+      })
+    }
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setExpenseForm({
+        ...expenseForm,
+        category_id: categories[0].id,
+      });
+    }
+  }, [categories]);
+
+  console.log(expenseForm)
+
+  function handleExpenseFormChange(e){
+    setExpenseForm({
+      ...expenseForm,
+      [e.target.name]: e.target.value,
+    })
+  }
+
 
   function handleDeleteExpense(deletedExpense){
     let allIncomes = transactions.filter((transaction) => !transaction.category_id)
@@ -62,24 +102,6 @@ const Budget = ({ setUser, user }) => {
     setTransactions(updatedTransactions.flat())
     let newRemainingAmount = remainingAmount - deletedIncome.amount
     setRemainingAmount(newRemainingAmount)
-  }
-
-  //   let testing = transactions.filter((transaction) => !transaction.category_id)
-  // console.log(testing)
-
-  // change functions for forms
-  function handleCategoryFormChange(e){
-    setCategoryForm({
-      ...categoryForm,
-      [e.target.name]: e.target.value,
-    })
-  }
-
-  function handleIncomeFormChange(e){
-    setIncomeForm({
-      ...incomeForm,
-      [e.target.name]: e.target.value,
-    })
   }
 
     useEffect(() => {
@@ -198,8 +220,6 @@ const Budget = ({ setUser, user }) => {
 
     const progressBar = 100 - (remainingAmount / totalIncome) * 100
 
-    console.log(categories)
-
   return (
     <>
     <Navbar setUser={setUser} user={user}/>
@@ -280,13 +300,13 @@ const Budget = ({ setUser, user }) => {
         </CardHeader>
         <CardBody>
         <Text>Expense Name</Text>
-          <Input placeholder="e.g. Coffee" />
+          <Input placeholder="e.g. Coffee" name="title" value={expenseForm.title} onChange={handleExpenseFormChange}/>
           <Text>Amount</Text>
-          <Input placeholder="e.g. 3.50" mb={2} /> 
+          <Input name="amount" value={expenseForm.amount} onChange={handleExpenseFormChange}placeholder="e.g. 3.50" mb={2} /> 
           {categories?.length === 0 ? <Text>Create Category First!</Text> : 
           <>
           <Text>Category</Text>
-            <Select>
+            <Select value={expenseForm.category_id} onChange={handleExpenseFormChange} name="category_id">
             {categories?.map(category => (<option key={category.id} value={category.id}>{category.title}</option>))}
           </Select>
           </>}
