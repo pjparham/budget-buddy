@@ -27,7 +27,7 @@ const Budget = ({ setUser, user }) => {
   const [transactions, setTransactions] = useState([]);
   const [incomes, setIncomes] = useState([])
   const [remainingAmount, setRemainingAmount] = useState()
-  const [items, setItems] = useState([0, 1, 2, 3]);
+  const [items, setItems] = useState([0, 1, 2]);
 
 
   //state for forms
@@ -86,7 +86,7 @@ const Budget = ({ setUser, user }) => {
     let allIncomes = transactions.filter((transaction) => !transaction.category_id)
     let allExpenses = transactions.filter((transaction) => transaction.category_id)
     console.log(allIncomes, allExpenses)
-    let updatedExpenses = allExpenses.filter((expense) => expense.id != deletedExpense.id)
+    let updatedExpenses = allExpenses.filter((expense) => expense.id !== deletedExpense.id)
     console.log(updatedExpenses, 'updated expenses')
     let updatedTransactions = [incomes, updatedExpenses]
     console.log(updatedTransactions)
@@ -96,7 +96,7 @@ const Budget = ({ setUser, user }) => {
   function handleDeleteIncome(deletedIncome){
     let incomes = transactions.filter((transaction) => !transaction.category_id)
     let expenses = transactions.filter((transaction) => transaction.category_id)
-    let updatedIncomes = incomes.filter((income) => income.id != deletedIncome.id)
+    let updatedIncomes = incomes.filter((income) => income.id !== deletedIncome.id)
     let updatedTransactions =[expenses, updatedIncomes]
     setTransactions(updatedTransactions.flat())
     let newRemainingAmount = remainingAmount - deletedIncome.amount
@@ -282,9 +282,9 @@ const Budget = ({ setUser, user }) => {
                 display={"flex"}
                 flexWrap={"wrap"}
                 mb={'4'}>
+      {/* <Reorder.Item key={items[0]} value={items[0]}>
+      </Reorder.Item> */}
       <Reorder.Item key={items[0]} value={items[0]}>
-      </Reorder.Item>
-      <Reorder.Item key={items[1]} value={items[1]}>
         <Card>
           <CardHeader>
             <Heading size='md'>Add New Category</Heading>
@@ -305,7 +305,7 @@ const Budget = ({ setUser, user }) => {
           </CardFooter>
         </Card>
       </Reorder.Item>
-      <Reorder.Item key={items[2]} value={items[2]}>
+      <Reorder.Item key={items[1]} value={items[1]}>
         <Card>
           <CardHeader>
             <Heading size='md'>Add Income</Heading>
@@ -326,7 +326,7 @@ const Budget = ({ setUser, user }) => {
           </CardFooter>
         </Card>
       </Reorder.Item>
-      <Reorder.Item key={items[3]} value={items[3]}>
+      <Reorder.Item key={items[2]} value={items[2]}>
       <Card>
         <CardHeader>
           <Heading size='md'>Add Expense</Heading>
@@ -356,7 +356,7 @@ const Budget = ({ setUser, user }) => {
       </Reorder.Item>
     </SimpleGrid>
     </Reorder.Group>
-    {transactions.length === 0 ? null : <BudgetTable transactions={transactions} handleDeleteExpense={handleDeleteExpense} handleDeleteIncome={handleDeleteIncome} toast={toast}/>}
+    {transactions.length === 0 ? null : <BudgetTable transactions={transactions} handleDeleteExpense={handleDeleteExpense} handleDeleteIncome={handleDeleteIncome} toast={toast} categories={categories}/>}
     </>
   )
 }
