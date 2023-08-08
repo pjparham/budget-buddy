@@ -42,17 +42,18 @@ export default function BudgetChart({ budget, categories, progressBar, transacti
     <Container
         as={SimpleGrid}
         maxW={'6xl'}
-        columns={{ base: 1, md: 2 }}
+        columns={'2'}
         spacing={{ base: 10, lg: 32 }}
         py={{ base: 10, sm: 20, lg: 15 }}>
         <Chart
         chartType="PieChart"
         data={data}
         options={options}
-        width="100%"
+        width="115%"
         height="400px"
+        
         />
-        <Card mb={'20'}>
+        <Card mb={'20'} maxW={'l'}>
           <CardHeader>
             <Heading size='md'>Total Spent</Heading>
             <Text>${totalExpenses}</Text>
