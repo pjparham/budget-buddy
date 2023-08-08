@@ -115,16 +115,25 @@ class Budgets(Resource):
 
 
     def post(self):
+
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+    
         data = request.get_json()
         title = data.get('title')
-        if session.get('user_id'):
-            user = User.query.filter(User.id == session['user_id']).first()
+
+        user = User.query.filter(User.id == session['user_id']).first()
+
+        try:
             new_budget = Budget(title=title, user=user)
             db.session.add(new_budget)
             db.session.commit()
             return make_response(jsonify(new_budget.to_dict()), 201)
-        else:
-            return make_response(jsonify({'error': 'Not authorized'}), 401)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while creating the budget'}), 500)
+
         
     def delete(self, budget_id):
         if not session.get('user_id'):
@@ -232,10 +241,8 @@ class Categories(Resource):
             with db.session.begin_nested():  
                 new_category = Category(title=title, amount=float_amount, budget=budget)
                 db.session.add(new_category)
-                db.session.flush()  # Flush the session to get the new_income.id
-                print('hello')
+                db.session.flush()
                 budget.remaining_amount -= float_amount
-                print('goodbye')
 
             db.session.commit()  
 
@@ -246,12 +253,89 @@ class Categories(Resource):
             db.session.rollback()
             return make_response(jsonify({'error': 'An error occurred while adding this category'}), 500)
         
+    def patch(self, category_id):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        data = request.get_json()
+        title = data.get('title')
+        amount = data.get('amount')
+        float_amount = float(amount)
+        
+        category = Category.query.get(category_id)
+        if not category:
+            return make_response(jsonify({'error': 'Category not found'}), 404)
+        
+        budget = category.budget
+
+        diff = float_amount - category.amount
+
+        potential_remaining = budget.remaining_amount - diff
+
+        if potential_remaining < 0:
+            return make_response(jsonify({'error': 'Updating this category would result in negative remaining amount'}), 400)
+        
+        try:
+            category.amount = float_amount
+            category.title = title
+            budget.remaining_amount -= diff
+            db.session.commit()
+
+            return make_response(jsonify(category.to_dict()), 200)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while updating the category'}), 500)
+
+        
+        
+    def delete(self, category_id):
+        if not session.get('user_id'):
+            return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        category = Category.query.get(category_id)
+        if not category:
+            return make_response(jsonify({'error': 'Category not found'}), 404)
+        
+        budget = category.budget
+
+        try:
+            budget.remaining_amount += category.amount
+            db.session.delete(category)
+            db.session.commit()
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while deleting the income'}), 500)
+
 api.add_resource(Categories, '/categories', '/categories/<int:category_id>')
 
 class Expenses(Resource):
     def post(self):
         if not session.get('user_id'):
             return make_response(jsonify({'error': 'Not authorized'}), 401)
+        
+        data = request.get_json()
+        title = data.get('title')
+        amount = data.get('amount')
+        category_id = data.get('category_id')
+        float_amount = float(amount)
+
+        category = Category.query.get(category_id)
+        if not category:
+            return make_response(jsonify({'error': 'Category not found'}), 404)
+        
+        try:
+            new_expense = Expense(title=title, amount=float_amount, category=category)
+            db.session.add(new_expense)
+            db.session.commit()
+
+            return make_response(jsonify(new_expense.to_dict()), 201)
+
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while adding this expense'}), 500)
         
     def delete(self, expense_id):
         if not session.get('user_id'):
