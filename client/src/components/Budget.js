@@ -73,7 +73,6 @@ const Budget = ({ setUser, user }) => {
     }
   }, [categories]);
 
-  console.log(expenseForm)
 
   function handleExpenseFormChange(e){
     setExpenseForm({
@@ -221,7 +220,7 @@ const Budget = ({ setUser, user }) => {
 
     function postExpense(e){
       e.preventDefault()
-      fetch('/categories', {
+      fetch('/expenses', {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(expenseForm)
@@ -350,6 +349,7 @@ const Budget = ({ setUser, user }) => {
                   bg={'green.400'}
                   rounded={'full'}
                   leftIcon={<IoMdAdd/>}
+                  onClick={postExpense}
                   >Add Expense</Button>
         </CardFooter>
       </Card>

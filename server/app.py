@@ -251,6 +251,28 @@ class Expenses(Resource):
         if not session.get('user_id'):
             return make_response(jsonify({'error': 'Not authorized'}), 401)
         
+        data = request.get_json()
+        title = data.get('title')
+        amount = data.get('amount')
+        category_id = data.get('category_id')
+        float_amount = float(amount)
+
+        category = Category.query.get(category_id)
+        if not category:
+            return make_response(jsonify({'error': 'Category not found'}), 404)
+        
+        try:
+            new_expense = Expense(title=title, amount=float_amount, category=category)
+            db.session.add(new_expense)
+            db.session.commit()
+
+            return make_response(jsonify(new_expense.to_dict()), 201)
+
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while adding this expense'}), 500)
+        
     def delete(self, expense_id):
         if not session.get('user_id'):
             return make_response(jsonify({'error': 'Not authorized'}), 401)
