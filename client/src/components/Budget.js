@@ -143,6 +143,11 @@ const Budget = ({ setUser, user }) => {
       setTransactions(allTransactions)
     }
 
+    function addExpense(newExpense){
+      let allTransactions = [...transactions, newExpense]
+      setTransactions(allTransactions)
+    }
+
     function updateTransactions() {
       if (categories) {
         let allTransactions = [];
@@ -200,6 +205,35 @@ const Budget = ({ setUser, user }) => {
             "title": "",
             "amount": "",
             "budget_id": id
+          })
+        } else{
+          r.json().then(e =>
+            toast({
+              title: `${r.status} ${e.error}`,
+              status: "error",
+              position: "top",
+              isClosable: true,
+            })
+            )
+        }
+      })
+    }
+
+    function postExpense(e){
+      e.preventDefault()
+      fetch('/categories', {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(expenseForm)
+      })
+      .then((r) => {
+        if(r.ok){
+          r.json()
+          .then((newExpense) => addExpense(newExpense))
+          setExpenseForm({
+            "title": "",
+            "amount": "",
+            "category_id": categories[0].id
           })
         } else{
           r.json().then(e =>
