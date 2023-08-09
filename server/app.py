@@ -36,6 +36,7 @@ HTTP_SERVER_ERROR = 500
 def authorized(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
+        #checks session to ensure user is logged in 
         if not session.get('user_id'):
             return make_response(jsonify({'error': 'Not authorized'}), HTTP_UNAUTHORIZED)
         return func(*args, **kwargs)
@@ -51,6 +52,7 @@ class Users(Resource):
         return make_response(jsonify(user_dict), HTTP_SUCCESS)
     
     def post(self):
+        #creates new user
         data = request.get_json()
         name = data.get('name')
         password = data.get('password')
@@ -59,9 +61,10 @@ class Users(Resource):
         if not name or not password or not email:
             return make_response(jsonify({'error': 'Name, Email, and Password are required fields'}), HTTP_BAD_REQUEST)
 
+        #checks if other users have already used this email
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            return make_response(jsonify({'error': 'User Already Exists'}), HTTP_CONFLICT)
+            return make_response(jsonify({'error': 'User with this email already exists'}), HTTP_CONFLICT)
 
         new_user = User(name=name, email=email)
         new_user.password_hash = new_user._generate_password_hash(password)
@@ -71,6 +74,7 @@ class Users(Resource):
         return make_response(jsonify(new_user.to_dict()), HTTP_CREATED)
     
     def patch(self, user_id):
+        #updates user info
         if not session.get('user_id') or session.get('user_id') != user_id:
             return make_response(jsonify({'error': 'Not authorized'}), HTTP_UNAUTHORIZED)
         
@@ -85,6 +89,10 @@ class Users(Resource):
         
         if not name or not password or not email:
             return make_response(jsonify({'error': 'Name, Email, and Password are required fields'}), HTTP_BAD_REQUEST)
+        #checks if other users have already used this email
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return make_response(jsonify({'error': 'User with this email already exists'}), HTTP_CONFLICT)
         
         user.email = email
         user.name = name
@@ -95,6 +103,7 @@ class Users(Resource):
         return make_response(jsonify(user.to_dict()), HTTP_SUCCESS)
     
     def delete(self, user_id):
+        #deletes user
         if not session.get('user_id') or session.get('user_id') != user_id:
             return make_response(jsonify({'error': 'Not authorized'}), HTTP_UNAUTHORIZED)
         
@@ -113,7 +122,8 @@ api.add_resource(Users, '/users', '/users/<int:user_id>')
 
 class Budgets(Resource):
     @authorized
-    def get(self, budget_id):        
+    def get(self, budget_id):       
+        #gets budget with provided ID 
         budget = Budget.query.get(budget_id)
         if not budget:
             return make_response(jsonify({'error': 'Budget not found'}), HTTP_NOT_FOUND)
@@ -132,6 +142,7 @@ class Budgets(Resource):
 
     @authorized
     def post(self):
+        #creates new budget
         data = request.get_json()
         title = data.get('title')
 
@@ -149,6 +160,7 @@ class Budgets(Resource):
     
     @authorized
     def patch(self, budget_id):
+        #changes name of existing budget
         budget = Budget.query.get(budget_id)
         if not budget:
             return make_response(jsonify({'error': 'Budget not found'}), HTTP_NOT_FOUND)
@@ -167,6 +179,7 @@ class Budgets(Resource):
 
     @authorized
     def delete(self, budget_id):
+        #deletes budget
         budget = Budget.query.get(budget_id)
         if not budget:
             return make_response(jsonify({'error': 'Budget not found'}), HTTP_NOT_FOUND)
@@ -191,6 +204,7 @@ api.add_resource(Budgets, '/budgets', '/budgets/<int:budget_id>')
 class Incomes(Resource):
     @authorized
     def post(self):
+        #adds new income
         data = request.get_json()
         title = data.get('title')
         amount = data.get('amount')
@@ -218,6 +232,7 @@ class Incomes(Resource):
     
     @authorized
     def delete(self, income_id):
+        #deletes income with proivded ID
         income = Income.query.get(income_id)
         if not income:
             return make_response(jsonify({'error': 'Income not found'}), HTTP_NOT_FOUND)
@@ -225,7 +240,7 @@ class Incomes(Resource):
         try:
             with db.session.begin_nested():  
                 budget = income.budget
-                
+                #ensures budget.reaining_amount does not go below 0
                 if budget.remaining_amount < income.amount:
                     return make_response(jsonify({'error': 'Deleting this income would result in negative remaining amount'}), HTTP_BAD_REQUEST)
 
@@ -244,7 +259,8 @@ api.add_resource(Incomes, '/incomes', '/incomes/<int:income_id>')
 
 class Categories(Resource):
     @authorized
-    def post(self):        
+    def post(self): 
+        #creates new category       
         data = request.get_json()
         title = data.get('title')
         amount = data.get('amount')
@@ -254,7 +270,7 @@ class Categories(Resource):
         budget = Budget.query.get(budget_id)
         if not budget:
             return make_response(jsonify({'error': 'Budget not found'}), HTTP_NOT_FOUND)
-        
+        #ensures budget.remaining_amount does not go below 0
         if budget.remaining_amount < float_amount:
             return make_response(jsonify({'error': 'Adding this category would result in negative remaining amount'}), HTTP_BAD_REQUEST)
         
@@ -276,7 +292,8 @@ class Categories(Resource):
             return make_response(jsonify({'error': 'An error occurred while adding this category'}), HTTP_SERVER_ERROR)
     
     @authorized
-    def patch(self, category_id):        
+    def patch(self, category_id):   
+        # updates category data     
         data = request.get_json()
         title = data.get('title')
         amount = data.get('amount')
@@ -291,7 +308,7 @@ class Categories(Resource):
         diff = float_amount - category.amount
 
         potential_remaining = budget.remaining_amount - diff
-
+        #ensures budget.remaining_amount does not go below 0
         if potential_remaining < 0:
             return make_response(jsonify({'error': 'Updating this category would result in negative remaining amount'}), HTTP_BAD_REQUEST)
         
@@ -309,6 +326,7 @@ class Categories(Resource):
 
     @authorized
     def delete(self, category_id):
+        #deletes category with provided I
         category = Category.query.get(category_id)
         if not category:
             return make_response(jsonify({'error': 'Category not found'}), HTTP_NOT_FOUND)
@@ -330,7 +348,7 @@ api.add_resource(Categories, '/categories', '/categories/<int:category_id>')
 class Expenses(Resource):
     @authorized
     def post(self):
-
+        #adds new expense
         data = request.get_json()
         title = data.get('title')
         amount = data.get('amount')
@@ -355,7 +373,7 @@ class Expenses(Resource):
     
     @authorized
     def delete(self, expense_id):
-
+        #deletes expense with provided ID
         expense = Expense.query.get(expense_id)
         if not expense:
             return make_response(jsonify({'error': 'Expense not found'}), HTTP_NOT_FOUND)
@@ -400,6 +418,7 @@ api.add_resource(Logout, '/logout')
 
 class CheckSession(Resource):
     def get(self):
+        #checks session for user_id for auto-login
         if session.get('user_id'):
             user = User.query.filter(User.id == session['user_id']).first()
             return make_response(jsonify(user.to_dict()), HTTP_SUCCESS)
