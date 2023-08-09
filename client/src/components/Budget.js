@@ -274,17 +274,13 @@ const Budget = ({ setUser, user }) => {
         {budget?.title} Overview
         </Text>
     </Heading>
-
     {categories?.length === 0 ? null : <BudgetChart budget={budget} categories={categories} progressBar={progressBar} transactions={transactions} remainingAmount={remainingAmount} incomes={incomes}/>}
-    
     <Reorder.Group axis='x' values={items} onReorder={setItems}>
     <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
                 justifyContent={"center"}
                 display={"flex"}
                 flexWrap={"wrap"}
                 mb={'4'}>
-      {/* <Reorder.Item key={items[0]} value={items[0]}>
-      </Reorder.Item> */}
       <Reorder.Item key={items[0]} value={items[0]}>
         <Card>
           <CardHeader>
@@ -359,19 +355,18 @@ const Budget = ({ setUser, user }) => {
     </Reorder.Group>
       {categories && categories.length > 0 ? (
         <>
-                <Heading mb={'4'}>Existing Categories</Heading>
-        <SimpleGrid spacing={4}
+          <Heading mb={'4'}
+                   bgGradient="linear(to-r, green.400,green.700)"
+                   bgClip="text">Existing Categories</Heading>
+             <SimpleGrid spacing={4}
                   justifyContent={"center"}
                   display={"flex"}
                   flexWrap={"wrap"}
                   mb={'4'}>
-              {/* <div className="grid-lg"> */}
-                {/* <div className="flex-lg"> */}
-                {/* </div> */}
                   {categories.map((category) => (
                     <CategoryCard key={category.id} category={category} totalIncome={totalIncome} />
                     ))}
-            </SimpleGrid>
+              </SimpleGrid>
           </>
       ) : null}
 
