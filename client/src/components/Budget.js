@@ -14,6 +14,11 @@ import { Heading,
          SimpleGrid,
          Button,
          Input,
+         NumberInput,
+         NumberInputField,
+         NumberInputStepper,
+         NumberIncrementStepper,
+         NumberDecrementStepper,
          Select,
          useToast } from '@chakra-ui/react'
 
@@ -290,7 +295,13 @@ const Budget = ({ setUser, user }) => {
             <Text>Category Name</Text>
             <Input placeholder="e.g. Groceries" name="title" value={categoryForm.title} onChange={handleCategoryFormChange}/>
             <Text>Amount</Text>
-            <Input placeholder="e.g. 350" name="amount" value={categoryForm.amount} onChange={handleCategoryFormChange}/> 
+            <NumberInput min={0}>
+              <NumberInputField placeholder="e.g. 350" name="amount" value={categoryForm.amount} onChange={handleCategoryFormChange}/>
+              <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
           </CardBody>
           <CardFooter justifyContent='center'>
           <Button colorScheme='green'
@@ -311,7 +322,13 @@ const Budget = ({ setUser, user }) => {
             <Text>Income Name</Text>
             <Input placeholder="e.g. First Paycheck" name="title" value={incomeForm.title} onChange={handleIncomeFormChange} />
             <Text>Amount</Text>
-            <Input placeholder="e.g. 1000" name="amount" value={incomeForm.amount} onChange={handleIncomeFormChange}/> 
+            <NumberInput min={0}>
+            <NumberInputField placeholder="e.g. 1000" name="amount" value={incomeForm.amount} onChange={handleIncomeFormChange}/>
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput> 
           </CardBody>
           <CardFooter justifyContent='center'>
             <Button colorScheme='green'
@@ -332,7 +349,13 @@ const Budget = ({ setUser, user }) => {
         <Text>Expense Name</Text>
           <Input placeholder="e.g. Coffee" name="title" value={expenseForm.title} onChange={handleExpenseFormChange}/>
           <Text>Amount</Text>
-          <Input name="amount" value={expenseForm.amount} onChange={handleExpenseFormChange}placeholder="e.g. 3.50" mb={2} /> 
+          <NumberInput min={0}>
+          <NumberInputField name="amount" value={expenseForm.amount} onChange={handleExpenseFormChange}placeholder="e.g. 3.50" /> 
+          <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+              </NumberInputStepper>
+          </NumberInput> 
           {categories?.length === 0 ? <Text>Create Category First!</Text> : 
           <>
           <Text>Category</Text>

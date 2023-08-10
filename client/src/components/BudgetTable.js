@@ -7,6 +7,7 @@ import {
   Th,
   Td,
   TableContainer,
+  Button,
   IconButton, } from '@chakra-ui/react'
 import { BsTrash3Fill } from 'react-icons/bs'
 
