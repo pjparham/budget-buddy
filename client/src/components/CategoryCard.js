@@ -1,6 +1,5 @@
 import React from 'react'
 import { Card,
-         CardHeader,
          Heading,
          CardBody,
          CardFooter,
@@ -19,6 +18,8 @@ const CategoryCard = ({ category, totalIncome }) => {
         console.log(catId)
       }
 
+      console.log(category)
+
   return (
         <>
             <Card className='budget'>
@@ -27,7 +28,7 @@ const CategoryCard = ({ category, totalIncome }) => {
                         <Text>${totalIncome} Budgeted</Text>
                 </div>
                 <CardBody>
-                    <Progress  hasStripe max={totalIncome} value={category.amount}></Progress>
+                    <Progress colorScheme='green' hasStripe max={totalIncome} value={category.amount}></Progress>
                 </CardBody>
                 <div className="progress-text">
                     <small>${category.amount} spent</small>

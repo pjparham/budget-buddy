@@ -51,7 +51,6 @@ export default function BudgetChart({ budget, categories, progressBar, transacti
         options={options}
         width="115%"
         height="400px"
-        
         />
         <Card mb={'20'} maxW={'l'}>
           <CardHeader>
