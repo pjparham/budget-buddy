@@ -10,7 +10,7 @@ import { Card,
 import { useNavigate } from 'react-router-dom' 
 import { GiTakeMyMoney } from 'react-icons/gi'
 
-const CategoryCard = ({ category, totalIncome }) => {
+const CategoryCard = ({ category, fromBudget }) => {
     const navigate = useNavigate()
     //initates accumulator for total spent
     let totalSpent = 0
@@ -39,8 +39,8 @@ const CategoryCard = ({ category, totalIncome }) => {
                     <small>${category.amount - totalSpent} remaining</small>
                 </div>
                 <CardFooter justifyContent={'center'}>
-                    <Button colorScheme='green' size='sm' leftIcon={<GiTakeMyMoney />}
-                        onClick={() => categoryLink(category.id)}>View Details</Button>
+                    {fromBudget ? <Button colorScheme='green' size='sm' leftIcon={<GiTakeMyMoney />}
+                        onClick={() => categoryLink(category.id)}>View Details</Button> : null}
                 </CardFooter>
             </Card>
         </>
