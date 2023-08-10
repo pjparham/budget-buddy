@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar'
 import { useParams } from 'react-router-dom'
 
-const Category = ({ category }) => {
+const Category = () => {
     const { id } = useParams()
+    const [category, setCategory] = useState()
+
 
     useEffect(() => { 
         fetch(`/categories/${id}`)
         .then(res => res.json())
         .then(category => {
-            console.log(category)
+            setCategory(category)
         })
     }, [])
 
-
+    console.log(category)
   return (
     <>
         <Navbar />
