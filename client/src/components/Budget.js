@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import BudgetChart from './BudgetChart'
 import BudgetTable from './BudgetTable'
+import CategoryCard from './CategoryCard'
 import Navbar from './Navbar'
 import { Heading,
          Text,
@@ -356,6 +357,24 @@ const Budget = ({ setUser, user }) => {
       </Reorder.Item>
     </SimpleGrid>
     </Reorder.Group>
+      {categories && categories.length > 0 ? (
+        <>
+                <Heading mb={'4'}>Existing Categories</Heading>
+        <SimpleGrid spacing={4}
+                  justifyContent={"center"}
+                  display={"flex"}
+                  flexWrap={"wrap"}
+                  mb={'4'}>
+              {/* <div className="grid-lg"> */}
+                {/* <div className="flex-lg"> */}
+                {/* </div> */}
+                  {categories.map((category) => (
+                    <CategoryCard key={category.id} category={category} totalIncome={totalIncome} />
+                    ))}
+            </SimpleGrid>
+          </>
+      ) : null}
+
     {transactions.length === 0 ? null : <BudgetTable transactions={transactions} handleDeleteExpense={handleDeleteExpense} handleDeleteIncome={handleDeleteIncome} toast={toast} categories={categories}/>}
     </>
   )
