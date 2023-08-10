@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Chart } from 'react-google-charts'
 import { Heading,
          Container,
@@ -9,11 +9,24 @@ import { Heading,
          Progress,
          CardFooter,
          SimpleGrid,
-         Button } from '@chakra-ui/react'
+         Button,
+         useToast,
+         useDisclosure,
+         AlertDialog,
+         AlertDialogBody,
+         AlertDialogFooter,
+         AlertDialogHeader,
+         AlertDialogContent,
+         AlertDialogOverlay, } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
 import { BsTrash3Fill } from 'react-icons/bs'
 
-export default function BudgetChart({ budget, categories, progressBar, transactions, incomes, remainingAmount }) {
+export default function BudgetChart({ setUser, user, budget, categories, progressBar, transactions, incomes, remainingAmount }) {
     const data = [["Category", "Amount Allocated"]];
+    const navigate = useNavigate()
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const cancelRef = useRef()
+    const toast = useToast
 
     const totalExpenses = categories?.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.amount;
@@ -37,6 +50,21 @@ export default function BudgetChart({ budget, categories, progressBar, transacti
             color: '#B2BEB5'
         },
       }
+
+    function handleDeleteBudget(){
+        fetch(`/budgets/${budget.id}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        })
+        .then((r) => {
+            if(r.ok){
+                r.json()
+                const updatedBudgets = user.budgets.filter((b) => b.id !== budget.id)
+                setUser({...user, budgets: updatedBudgets})
+                navigate('/home')
+            }
+        })
+    } 
 
   return budget && categories ? (
     <Container
@@ -66,9 +94,33 @@ export default function BudgetChart({ budget, categories, progressBar, transacti
                       bg={'red.400'}
                       rounded={'full'}
                       leftIcon={<BsTrash3Fill/>}
+                      onClick={onOpen}
                       >Delete Budget</Button>
             </CardFooter>
           </Card>
+          <AlertDialog
+              isOpen={isOpen}
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}>
+            <AlertDialogOverlay>
+              <AlertDialogContent>
+                  <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                    Delete Budget
+                  </AlertDialogHeader>
+                  <AlertDialogBody>
+                    Are you sure? You can't undo this action afterwards.
+                  </AlertDialogBody>
+                  <AlertDialogFooter>
+                  <Button ref={cancelRef} onClick={onClose}>
+                    Cancel
+                  </Button>
+                  <Button colorScheme='red' onClick={handleDeleteBudget} ml={3}>
+                    Delete
+                  </Button>
+                  </AlertDialogFooter>
+                  </AlertDialogContent>
+              </AlertDialogOverlay>
+            </AlertDialog>
     </Container>
   ) : <><br/><h1>Loading...</h1></>;
 }

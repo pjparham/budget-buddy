@@ -71,7 +71,7 @@ const Budget = ({ setUser, user }) => {
     }
 
   useEffect(() => {
-    if (categories.length > 0) {
+    if (categories?.length > 0) {
       setExpenseForm({
         ...expenseForm,
         category_id: categories[0].id,
@@ -182,7 +182,13 @@ const Budget = ({ setUser, user }) => {
             "amount": "",
             "budget_id": id
           })
-        } else{
+          toast({
+            title: "Category Created",
+            status: "success",
+            position: "top",
+            isClosable: true,
+          })
+        } else {
           r.json().then(e =>
             toast({
               title: `${r.status} ${e.error}`,
@@ -210,6 +216,12 @@ const Budget = ({ setUser, user }) => {
             "title": "",
             "amount": "",
             "budget_id": id
+          })
+          toast({
+            title: "Income Created",
+            status: "success",
+            position: "top",
+            isClosable: true,
           })
         } else{
           r.json().then(e =>
@@ -239,6 +251,12 @@ const Budget = ({ setUser, user }) => {
             "title": "",
             "amount": "",
             "category_id": categories[0].id
+          })
+          toast({
+            title: "Expense Created",
+            status: "success",
+            position: "top",
+            isClosable: true,
           })
         } else{
           r.json().then(e =>
@@ -279,7 +297,7 @@ const Budget = ({ setUser, user }) => {
         {budget?.title} Overview
         </Text>
     </Heading>
-    {categories?.length === 0 ? null : <BudgetChart budget={budget} categories={categories} progressBar={progressBar} transactions={transactions} remainingAmount={remainingAmount} incomes={incomes}/>}
+    {categories?.length === 0 ? null : <BudgetChart setUser={setUser} user={user} budget={budget} categories={categories} progressBar={progressBar} transactions={transactions} remainingAmount={remainingAmount} incomes={incomes}/>}
     <Reorder.Group axis='x' values={items} onReorder={setItems}>
     <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
                 justifyContent={"center"}

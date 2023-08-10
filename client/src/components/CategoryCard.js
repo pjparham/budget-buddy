@@ -15,10 +15,7 @@ const CategoryCard = ({ category, totalIncome }) => {
 
     function categoryLink(catId){
         navigate(`/categories/${catId}`)
-        console.log(catId)
       }
-
-      console.log(category)
 
   return (
         <>
