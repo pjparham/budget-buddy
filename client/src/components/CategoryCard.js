@@ -12,24 +12,31 @@ import { GiTakeMyMoney } from 'react-icons/gi'
 
 const CategoryCard = ({ category, totalIncome }) => {
     const navigate = useNavigate()
+    //initates accumulator for total spent
+    let totalSpent = 0
+    if(category){
+        //adds amount of each expense to total spent accumulator
+        category.expenses.forEach((expense) => totalSpent += expense.amount) //adds amount of each expense to total spent acculumater
+    }
 
     function categoryLink(catId){
         navigate(`/categories/${catId}`)
       }
+    console.log(category.title, totalSpent)
 
   return (
         <>
             <Card className='budget'>
                 <div className='progress-text'>
                         <Heading size='md'>{category.title}</Heading>
-                        <Text>${totalIncome} Budgeted</Text>
+                        <Text>${category.amount} Budgeted</Text>
                 </div>
                 <CardBody>
-                    <Progress colorScheme='green' hasStripe max={totalIncome} value={category.amount}></Progress>
+                    <Progress colorScheme='green' hasStripe max={category.amount} value={totalSpent}></Progress>
                 </CardBody>
                 <div className="progress-text">
-                    <small>${category.amount} spent</small>
-                    <small>${totalIncome - category.amount} remaining</small>
+                    <small>${totalSpent} spent</small>
+                    <small>${category.amount - totalSpent} remaining</small>
                 </div>
                 <CardFooter justifyContent={'center'}>
                     <Button colorScheme='green' size='sm' leftIcon={<GiTakeMyMoney />}
