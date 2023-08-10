@@ -217,8 +217,7 @@ export default function Home({ setUser, user }) {
                     <AlertDialog
                       isOpen={isOpen}
                       leastDestructiveRef={cancelRef}
-                      onClose={onClose}
-                      >
+                      onClose={onClose}>
                         <AlertDialogOverlay>
                           <AlertDialogContent>
                             <AlertDialogHeader fontSize='lg' fontWeight='bold'>
@@ -227,7 +226,6 @@ export default function Home({ setUser, user }) {
                             <AlertDialogBody>
                               Are you sure? You can't undo this action afterwards.
                             </AlertDialogBody>
-
                             <AlertDialogFooter>
                               <Button ref={cancelRef} onClick={onClose}>
                                 Cancel

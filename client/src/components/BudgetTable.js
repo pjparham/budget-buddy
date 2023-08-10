@@ -19,13 +19,12 @@ export default function BudgetTable({ transactions, handleDeleteExpense, handleD
     setSortedTransactions(sorted);
   }, [transactions]);
 
-  console.log(transactions)
 
   function onDeleteTransaction(transaction){
     //this checks if it's income or expense
     if (transaction.category_id){  //expenses 
       console.log('this is an expense')
-    } else{ //incomes
+    } else { //incomes
       fetch(`/incomes/${transaction.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json"}
@@ -52,14 +51,12 @@ export default function BudgetTable({ transactions, handleDeleteExpense, handleD
   function displayCategory(transaction){
     if(transaction.category_id){
       let category = categories.filter((cat) => cat.id === transaction.category_id)
-      console.log(category)
       return <Td>{category[0].title}</Td>
     }
     else{
       return <Td>Income</Td>
     }
   }
-
 
   return (
     <> 
@@ -77,9 +74,9 @@ export default function BudgetTable({ transactions, handleDeleteExpense, handleD
           <Tbody>
               {sortedTransactions?.map(transaction => { return (
               <Tr key={transaction.title}>
-              <Td>{transaction.title}</Td>
-              <Td>{transaction.created_at.slice(0, 16)}</Td>
-              <Td color={transaction.category_id ? "red.600" : "green.700"}>{transaction.amount}</Td>
+              <Td>{transaction?.title}</Td>
+              <Td>{transaction?.created_at.slice(0, 16)}</Td>
+              <Td color={transaction.category_id ? "red.600" : "green.700"}>{transaction?.amount}</Td>
               {displayCategory(transaction)}
               <Td><IconButton
                       colorScheme='red'
