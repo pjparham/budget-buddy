@@ -56,7 +56,7 @@ class Users(Resource):
         data = request.get_json()
         name = data.get('name')
         password = data.get('password')
-        email = data.get('email')
+        email = data.get('email').lower()
 
         if not name or not password or not email:
             return make_response(jsonify({'error': 'Name, Email, and Password are required fields'}), HTTP_BAD_REQUEST)
@@ -85,7 +85,7 @@ class Users(Resource):
         data = request.get_json()
         name = data.get('name')
         password = data.get('password')
-        email = data.get('email')
+        email = data.get('email').lower()
         
         if not name or not password or not email:
             return make_response(jsonify({'error': 'Name, Email, and Password are required fields'}), HTTP_BAD_REQUEST)
@@ -434,7 +434,7 @@ api.add_resource(Expenses, '/expenses', '/expenses/<int:expense_id>')
 class Login(Resource):
     def post(self):
         request_json = request.get_json()
-        email = request_json.get('email')
+        email = request_json.get('email').lower()
         password = request_json.get('password')
 
         user = User.query.filter(User.email == email).first()
