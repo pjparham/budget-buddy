@@ -26,17 +26,48 @@ export default function BudgetTable({ fromBudget, transactions, handleDeleteExpe
   function onDeleteTransaction(transaction){
     //this checks if it's income or expense
     if (transaction.category_id){  //expenses 
-      console.log('this is an expense')
+      fetch(`/expenses/${transaction.id}`, 
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      })
+      .then((r) => {
+        if(r.ok){
+          r.json()
+          handleDeleteExpense(transaction)
+          toast({
+            title: "Expense Deleted",
+            status: "success",
+            position: "top",
+            isClosable: true,
+          })
+        } else {
+          r.json().then(e =>
+            toast({
+              title: `${r.status} ${e.error}`,
+              status: "error",
+              position: "top",
+              isClosable: true,
+            })
+            )
+        }
+      })
     } else { //incomes
       fetch(`/incomes/${transaction.id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json"}
+        headers: { "Content-Type": "application/json" }
       })
       .then((r) => {
         if(r.ok){
           r.json()
           handleDeleteIncome(transaction)
-        } else{
+          toast({
+            title: "Income Deleted",
+            status: "success",
+            position: "top",
+            isClosable: true,
+          })
+        } else {
           r.json().then(e =>
             toast({
               title: `${r.status} ${e.error}`,
@@ -78,7 +109,7 @@ export default function BudgetTable({ fromBudget, transactions, handleDeleteExpe
               {sortedTransactions?.map(transaction => { return (
               <Tr key={transaction.title}>
               <Td>{transaction?.title}</Td>
-              <Td>{transaction?.created_at.slice(0, 16)}</Td>
+              <Td>{transaction?.created_at?.slice(0, 16)}</Td>
               <Td color={transaction.category_id ? "red.600" : "green.700"}>{transaction?.amount}</Td>
               {fromBudget ? displayCategory(transaction) : null}
               {fromBudget ? <Td><IconButton

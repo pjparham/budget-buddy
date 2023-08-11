@@ -195,8 +195,8 @@ export default function Home({ setUser, user }) {
             <Heading size='xl'>Your Budgets</Heading>
             <br />
               {user?.budgets.map(bud => (
-              <Stack spacing='4'>
-                  <Card variant='outline' key={bud.id}>
+              <Stack spacing='4' key={bud.id}>
+                  <Card variant='outline'>
                     <CardHeader>
                       <Heading size='md'>{bud?.title}</Heading>
                     </CardHeader>
