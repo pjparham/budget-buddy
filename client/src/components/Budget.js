@@ -281,7 +281,7 @@ const Budget = ({ setUser, user, categories, setCategories }) => {
     if (!budget){
       return (
         <>
-          <Navbar />
+          <Navbar setUser={setUser} user={user}/>
           <Loading/>
         </>
       )

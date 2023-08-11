@@ -7,31 +7,36 @@ import BudgetTable from './BudgetTable'
 import { Heading, Text, Container } from '@chakra-ui/react'
 import Loading from './Loading'
 
-const Category = () => {
+const Category = ({ categories, user, setUser }) => {
     const { id } = useParams()
     const [category, setCategory] = useState()
 
-
-    useEffect(() => { 
-        fetch(`/categories/${id}`)
-        .then(res => res.json())
-        .then(category => {
-            setCategory(category)
-        })
+      useEffect(() => { 
+       let thisCategory = categories.find(cat => cat.id === parseInt(id))
+        setCategory(thisCategory)
     }, [])
 
-    console.log(category)
+
+    // useEffect(() => { 
+    //     fetch(`/categories/${id}`)
+    //     .then(res => res.json())
+    //     .then(category => {
+    //         setCategory(category)
+    //     })
+    // }, [])
+
+    // console.log(category)
   if (!category){
     return (
       <>
-        <Navbar />
+        <Navbar setUser={setUser} user={user}/>
         <Loading/>
       </>
     )
   }
   return (
     <>
-        <Navbar />
+        <Navbar setUser={setUser} user={user}/>
         <br />
         <Container padding="10px" alignItems="center">
           <CategoryCard fromBudget={false} key={category.id} category={category} />

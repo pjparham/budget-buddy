@@ -54,7 +54,7 @@ useEffect(() => {
             <Route exact path='/login-test' element={<LoginTest setUser={setUser}/>}/>
             <Route exact path='/home' element={<Home setUser={setUser} user={user}/>}/>
             <Route exact path='/budgets/:id' element={<Budget categories={categories} setCategories={setCategories} setUser={setUser} user={user}/>}/>
-            <Route exact path='/categories/:id' element={<Category setUser={setUser} user={user}/>}/>
+            <Route exact path='/categories/:id' element={<Category categories={categories} setUser={setUser} user={user}/>}/>
             <Route exact path='/user/profile' element={<UserProfile setUser={setUser} user={user}/>}/>
         </Routes>
     </AnimatePresence>
