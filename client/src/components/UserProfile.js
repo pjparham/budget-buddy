@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Navbar from './Navbar'
+import { useNavigate } from 'react-router-dom'
 import {
   Button,
   Flex,
@@ -10,14 +11,18 @@ import {
   Stack,
   useColorModeValue,
   Avatar,
-  AvatarBadge,
-  IconButton,
   Center,
   InputRightElement,
   InputGroup,
-  useToast
+  useToast,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useDisclosure,
 } from '@chakra-ui/react'
-import { SmallCloseIcon } from '@chakra-ui/icons'
 
 export default function UserProfileEdit({ user, setUser }) {
   const [userForm, setUserForm] = useState({
@@ -26,6 +31,9 @@ export default function UserProfileEdit({ user, setUser }) {
     "password": user?.password
   })
   const [show, setShow] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const navigate = useNavigate()
+  const cancelRef = useRef()
   const toast = useToast()
 
   function handleChange(e){
@@ -72,6 +80,22 @@ export default function UserProfileEdit({ user, setUser }) {
     })
     }
 
+  function handleDeleteUser(userId){
+    fetch(`/users/${userId}`, {
+      method: "DELETE"
+    })
+    .then(() => {
+      toast({
+        title: 'Deleted User',
+        status: "error",
+        position: "top",
+        isClosable: true,
+      })
+      setUser(null)
+      navigate('/')
+    })
+  } 
+
   return (
     <>
       <Navbar setUser={setUser} user={user}/>
@@ -97,20 +121,38 @@ export default function UserProfileEdit({ user, setUser }) {
           <Stack direction={['column', 'row']} spacing={6}>
             <Center>
               <Avatar size="xl" src="https://www.svgrepo.com/show/5125/avatar.svg">
-                <AvatarBadge
-                  as={IconButton}
-                  size="sm"
-                  rounded="full"
-                  top="-10px"
-                  colorScheme="red"
-                  aria-label="remove Image"
-                  icon={<SmallCloseIcon />}
-                />
               </Avatar>
             </Center>
             <Center w="full">
-              <Button w="full">Change Icon</Button>
+              <Button w="full" bgColor="red.400"
+                onClick={onOpen}
+                _hover={{
+                  bg: 'red.500',
+                }}>Delete User</Button>
             </Center>
+            <AlertDialog
+              isOpen={isOpen}
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}>
+                <AlertDialogOverlay>
+                <AlertDialogContent>
+                  <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                    Delete User
+                  </AlertDialogHeader>
+                  <AlertDialogBody>
+                    Are you sure? You will lose all your data!
+                  </AlertDialogBody>
+                  <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                      Cancel
+                    </Button>
+                    <Button colorScheme='red' onClick={() => handleDeleteUser(user.id)} ml={3}>
+                      Delete
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialogOverlay>
+            </AlertDialog>
           </Stack>
         </FormControl>
         <form onSubmit={handleUpdateUser}>
