@@ -90,14 +90,20 @@ const Budget = ({ setUser, user }) => {
 
 
   function handleDeleteExpense(deletedExpense){
+    //transaction state
     let allIncomes = transactions.filter((transaction) => !transaction.category_id)
     let allExpenses = transactions.filter((transaction) => transaction.category_id)
-    console.log(allIncomes, allExpenses)
     let updatedExpenses = allExpenses.filter((expense) => expense.id !== deletedExpense.id)
-    console.log(updatedExpenses, 'updated expenses')
     let updatedTransactions = [incomes, updatedExpenses]
     console.log(updatedTransactions)
     setTransactions(updatedTransactions.flat())
+    //category state
+    let thisCategory = categories.find((cat) => cat.id === deletedExpense.category_id)
+    let otherCategories = categories.filter((cat) => cat.id !== deletedExpense.category_id)
+    let thisCategoryExpenses = thisCategory.expenses.filter((expense) => expense.id !== deletedExpense.id)
+    thisCategory.expenses = thisCategoryExpenses
+    let updatedCategories = [...otherCategories, thisCategory]
+    setCategories(updatedCategories)
   }
 
   function handleDeleteIncome(deletedIncome){
