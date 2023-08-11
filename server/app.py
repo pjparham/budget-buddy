@@ -110,6 +110,17 @@ class Users(Resource):
         user = User.query.filter(User.id == session['user_id']).first()
         
         try:
+            #deletes associated budgets, incomes, etc
+            for budget in user.budgets:
+                for income in budget.incomes:
+                    db.session.delete(income)
+                for category in budget.categories:
+                    for expense in category.expenses:
+                        db.session.delete(expense)
+                    db.session.delete(category)
+                db.session.delete(budget)
+            
+
             db.session.delete(user)
             db.session.commit()
             return make_response(jsonify({'message': 'User deleted successfully'}), HTTP_SUCCESS)
@@ -190,6 +201,16 @@ class Budgets(Resource):
             return make_response(jsonify({'error': 'Not authorized to delete this budget'}), HTTP_UNAUTHORIZED)
         
         try:
+            #deletes incomes belonging to this budget
+            for income in budget.incomes:
+                db.session.delete(income)
+
+            #deletes categories belonging to this budget
+            for category in budget.categories:
+                for expense in category.expenses:
+                    db.session.delete(expense)
+                db.session.delete(category)
+
             db.session.delete(budget)
             db.session.commit()
             return make_response(jsonify({'message': 'Budget deleted successfully'}), HTTP_SUCCESS)
@@ -326,7 +347,7 @@ class Categories(Resource):
 
     @authorized
     def delete(self, category_id):
-        #deletes category with provided I
+        #deletes category with provided ID
         category = Category.query.get(category_id)
         if not category:
             return make_response(jsonify({'error': 'Category not found'}), HTTP_NOT_FOUND)
@@ -335,6 +356,10 @@ class Categories(Resource):
 
         try:
             budget.remaining_amount += category.amount
+            #deletes associated expenses
+            for expense in category.expenses:
+                db.session.delete(expense)
+            
             db.session.delete(category)
             db.session.commit()
             return make_response(jsonify({'message': 'Category deleted successfully'}), HTTP_SUCCESS)
