@@ -149,7 +149,7 @@ class Budgets(Resource):
 
         except Exception as e:
             db.session.rollback()
-            return make_response(jsonify({'error': 'An error occurred while deleting the budget'}), HTTP_SERVER_ERROR)
+            return make_response(jsonify({'error': 'An error occurred while retrieving this budget'}), HTTP_SERVER_ERROR)
 
     @authorized
     def post(self):
@@ -279,6 +279,19 @@ class Incomes(Resource):
 api.add_resource(Incomes, '/incomes', '/incomes/<int:income_id>')
 
 class Categories(Resource):
+    @authorized
+    def get(self, category_id):
+        category = Category.query.get(category_id)
+        if not category:
+            return make_response(jsonify({'error': 'Category not found'}), HTTP_NOT_FOUND)
+    
+        try:
+            return make_response(jsonify(category.to_dict()), HTTP_SUCCESS)
+
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({'error': 'An error occurred while retrieving this category'}), HTTP_SERVER_ERROR)
+
     @authorized
     def post(self): 
         #creates new category       
