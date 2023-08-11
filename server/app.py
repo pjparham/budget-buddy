@@ -90,9 +90,10 @@ class Users(Resource):
         if not name or not password or not email:
             return make_response(jsonify({'error': 'Name, Email, and Password are required fields'}), HTTP_BAD_REQUEST)
         #checks if other users have already used this email
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return make_response(jsonify({'error': 'User with this email already exists'}), HTTP_CONFLICT)
+        if email != user.email:
+            existing_user = User.query.filter_by(email=email).first()
+            if existing_user:
+                return make_response(jsonify({'error': 'User with this email already exists'}), HTTP_CONFLICT)
         
         user.email = email
         user.name = name
