@@ -8,10 +8,13 @@ import {
   Td,
   TableContainer,
   Button,
-  IconButton, } from '@chakra-ui/react'
+  IconButton,
+  useToast } from '@chakra-ui/react'
 import { BsTrash3Fill } from 'react-icons/bs'
 
-export default function BudgetTable({ transactions, handleDeleteExpense, handleDeleteIncome, toast, categories }) {
+export default function BudgetTable({ fromBudget, transactions, handleDeleteExpense, handleDeleteIncome, categories }) {
+  const toast = useToast()
+  
   const [sortedTransactions, setSortedTransactions] = useState([]);
 
   useEffect(() => {
@@ -60,15 +63,15 @@ export default function BudgetTable({ transactions, handleDeleteExpense, handleD
 
   return (
     <> 
-      <TableContainer>
+      <TableContainer maxWidth="100%">
         <Table variant='striped'>
           <Thead>
             <Tr>
               <Th>Name</Th>
               <Th>Date</Th>
               <Th>Amount</Th>
-              <Th>Category</Th>
-              <Th></Th>
+              {fromBudget ? <Th>Category</Th> : null}
+              {fromBudget ? <Th></Th> : null}
             </Tr>
           </Thead>
           <Tbody>
@@ -77,13 +80,13 @@ export default function BudgetTable({ transactions, handleDeleteExpense, handleD
               <Td>{transaction?.title}</Td>
               <Td>{transaction?.created_at.slice(0, 16)}</Td>
               <Td color={transaction.category_id ? "red.600" : "green.700"}>{transaction?.amount}</Td>
-              {displayCategory(transaction)}
-              <Td><IconButton
+              {fromBudget ? displayCategory(transaction) : null}
+              {fromBudget ? <Td><IconButton
                       colorScheme='red'
                       bg={'red.400'}
                       icon={<BsTrash3Fill />}
                       onClick={() => onDeleteTransaction(transaction)}
-                      /></Td>
+                      /></Td> : null}
             </Tr>
               )}
           )}

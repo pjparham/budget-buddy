@@ -405,13 +405,13 @@ const Budget = ({ setUser, user }) => {
                   flexWrap={"wrap"}
                   mb={'4'}>
                   {categories.map((category) => (
-                    <CategoryCard key={category.id} category={category} totalIncome={totalIncome} />
+                    <CategoryCard fromBudget={true} key={category.id} category={category} />
                     ))}
               </SimpleGrid>
           </>
       ) : null}
 
-    {transactions.length === 0 ? null : <BudgetTable transactions={transactions} handleDeleteExpense={handleDeleteExpense} handleDeleteIncome={handleDeleteIncome} toast={toast} categories={categories}/>}
+    {transactions.length === 0 ? null : <BudgetTable fromBudget={true} transactions={transactions} handleDeleteExpense={handleDeleteExpense} handleDeleteIncome={handleDeleteIncome} toast={toast} categories={categories}/>}
     </>
   )
 }
