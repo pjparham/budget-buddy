@@ -33,7 +33,7 @@ export default function BudgetChart({ setUser, user, budget, categories, progres
       }, 0)
 
     if(budget && categories){
-        data.push(["Remaining Amount", budget.remaining_amount])
+        data.push(["Remaining Amount", remainingAmount])
         categories.forEach((cat) => {
             data.push([cat.title, cat.amount])
         })

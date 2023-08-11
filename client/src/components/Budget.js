@@ -96,7 +96,7 @@ const Budget = ({ setUser, user }) => {
     console.log(updatedExpenses, 'updated expenses')
     let updatedTransactions = [incomes, updatedExpenses]
     console.log(updatedTransactions)
-    setTransactions(updatedTransactions)
+    setTransactions(updatedTransactions.flat())
   }
 
   function handleDeleteIncome(deletedIncome){
