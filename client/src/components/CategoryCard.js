@@ -22,7 +22,7 @@ const CategoryCard = ({ category, fromBudget }) => {
     function categoryLink(catId){
         navigate(`/categories/${catId}`)
       }
-    console.log(totalSpent)
+    // console.log(totalSpent)
 
   return (
         <>

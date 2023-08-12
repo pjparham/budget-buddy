@@ -38,6 +38,7 @@ export default function BudgetChart({ setUser, user, budget, categories, progres
             data.push([cat.title, cat.amount])
         })
     }
+    // console.log(transactions)
       
     const options = {
         title: budget?.title || '',

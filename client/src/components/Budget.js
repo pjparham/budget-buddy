@@ -25,12 +25,12 @@ import { Heading,
 
 import { IoMdAdd } from 'react-icons/io'
 
-const Budget = ({ setUser, user, categories, setCategories }) => {
+const Budget = ({ setUser, user }) => {
   const { id } = useParams()
   const toast = useToast()
 
   const [budget, setBudget] = useState();
-  // const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [incomes, setIncomes] = useState([])
   const [remainingAmount, setRemainingAmount] = useState()
@@ -90,14 +90,20 @@ const Budget = ({ setUser, user, categories, setCategories }) => {
 
 
   function handleDeleteExpense(deletedExpense){
+    //transaction state
     let allIncomes = transactions.filter((transaction) => !transaction.category_id)
     let allExpenses = transactions.filter((transaction) => transaction.category_id)
-    console.log(allIncomes, allExpenses)
     let updatedExpenses = allExpenses.filter((expense) => expense.id !== deletedExpense.id)
-    console.log(updatedExpenses, 'updated expenses')
     let updatedTransactions = [incomes, updatedExpenses]
     console.log(updatedTransactions)
     setTransactions(updatedTransactions.flat())
+    //category state
+    let thisCategory = categories.find((cat) => cat.id === deletedExpense.category_id)
+    let otherCategories = categories.filter((cat) => cat.id !== deletedExpense.category_id)
+    let thisCategoryExpenses = thisCategory.expenses.filter((expense) => expense.id !== deletedExpense.id)
+    thisCategory.expenses = thisCategoryExpenses
+    let updatedCategories = [...otherCategories, thisCategory]
+    setCategories(updatedCategories)
   }
 
   function handleDeleteIncome(deletedIncome){
@@ -152,7 +158,13 @@ const Budget = ({ setUser, user, categories, setCategories }) => {
     function addExpense(newExpense){
       let allTransactions = [...transactions, newExpense]
       setTransactions(allTransactions)
+      let thisCategory = categories.find((cat) => cat.id === newExpense.category_id)
+      let otherCategories = categories.filter((cat) => cat.id !== newExpense.category_id)
+      thisCategory.expenses.push(newExpense)
+      let updatedCategories = [...otherCategories, thisCategory]
+      setCategories(updatedCategories)
     }
+
 
     function updateTransactions() {
       if (categories) {
@@ -286,6 +298,7 @@ const Budget = ({ setUser, user, categories, setCategories }) => {
         </>
       )
     }
+    // console.log(expenseForm)
 
   return (
     <>
@@ -307,7 +320,7 @@ const Budget = ({ setUser, user, categories, setCategories }) => {
         {budget?.title} Overview
         </Text>
     </Heading>
-    {categories?.length === 0 ? null : <BudgetChart setUser={setUser} user={user} budget={budget} categories={categories} progressBar={progressBar} transactions={transactions} remainingAmount={remainingAmount} incomes={incomes}/>}
+    {transactions?.length === 0 ? null : <BudgetChart setUser={setUser} user={user} budget={budget} categories={categories} progressBar={progressBar} transactions={transactions} remainingAmount={remainingAmount} incomes={incomes}/>}
     <Reorder.Group axis='x' values={items} onReorder={setItems}>
     <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
                 justifyContent={"center"}
