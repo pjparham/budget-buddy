@@ -13,12 +13,13 @@ import { Card,
          EditableInput,
          EditableTextarea,
          EditablePreview,
-         CheckIc
+         useToast,
         } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom' 
 import { GiTakeMyMoney } from 'react-icons/gi'
 import { BiSolidEdit, BiCheck } from 'react-icons/bi'
 import { AiOutlineClose } from 'react-icons/ai'
+import { BsTrash3Fill } from 'react-icons/bs'
 
 const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
     const [isEditingTitle, setIsEditingTitle] = useState(false)
@@ -26,6 +27,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
     const [newAmount, setNewAmount] = useState(category.amount)
     const [newTitle, setNewTitle] = useState(category.title)
     const navigate = useNavigate()
+    const toast = useToast()
 
     console.log(categories)
     //initates accumulator for total spent
@@ -38,6 +40,30 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
     function categoryLink(catId){
         navigate(`/categories/${catId}`)
       }
+
+
+    //CRUD functions
+    function handleDeleteBudget(){
+        fetch(`/categories/${category.id}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        })
+        .then((r) => {
+            if(r.ok){
+                r.json()
+                .then(navigate('/home'))
+                setCategories(categories?.filter((cat) => cat.id !== category.id))
+                toast({
+                    title: 'Deleted Category',
+                    status: "success",
+                    position: "top",
+                    isClosable: true,
+                })
+            } else {
+                r.json().then(e => console.log(e))
+            }
+        })
+    }
 
     function patchTitleCategory(){
         fetch(`/categories/${category.id}`, {
@@ -131,9 +157,17 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                     <small>${totalSpent} spent</small>
                     <small>${category.amount - totalSpent} remaining</small>
                 </div>
-                <CardFooter justifyContent={'center'}>
-                    {fromBudget ? <Button colorScheme='green' size='sm' leftIcon={<GiTakeMyMoney />}
-                        onClick={() => categoryLink(category.id)}>View Details</Button> : null}
+                <CardFooter justifyContent={'center'} >
+                    {fromBudget ? <ButtonGroup spacing='4'>
+                    <Button colorScheme='green' size='sm' leftIcon={<GiTakeMyMoney />}
+                        onClick={() => categoryLink(category.id)}>View Details</Button> 
+                        <Button size='sm' bgColor='red.400'
+                            leftIcon={<BsTrash3Fill/>}
+                            onClick={handleDeleteBudget}>Delete</Button>
+                        </ButtonGroup> :
+                        <Button size='sm' bgColor='red.400'
+                        leftIcon={<BsTrash3Fill/>}
+                        onClick={handleDeleteBudget}>Delete</Button>}
                 </CardFooter>
             </Card>
         </>

@@ -25,13 +25,12 @@ import { Heading,
          AlertTitle,
          AlertDescription,
          useToast } from '@chakra-ui/react'
-
 import { IoMdAdd } from 'react-icons/io'
+
 
 const Budget = ({ setUser, user }) => {
   const { id } = useParams()
   const toast = useToast()
-
   const [budget, setBudget] = useState();
   const [categories, setCategories] = useState([]);
   const [transactions, setTransactions] = useState([]);
@@ -264,7 +263,7 @@ const Budget = ({ setUser, user }) => {
             position: "top",
             isClosable: true,
           })
-        } else{
+        } else {
           r.json().then(e =>
             toast({
               title: `${r.status} ${e.error}`,
@@ -383,7 +382,7 @@ const Budget = ({ setUser, user }) => {
           <Input placeholder="e.g. Coffee" name="title" value={expenseForm.title} onChange={handleExpenseFormChange}/>
           <Text>Amount</Text>
           <NumberInput min={0}>
-          <NumberInputField name="amount" value={expenseForm.amount} onChange={handleExpenseFormChange}placeholder="e.g. 3.50" /> 
+          <NumberInputField name="amount" value={expenseForm.amount === null ? "" : expenseForm.amount} onChange={handleExpenseFormChange}placeholder="e.g. 3.50" /> 
           <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />

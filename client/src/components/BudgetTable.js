@@ -85,7 +85,7 @@ export default function BudgetTable({ fromBudget, transactions, handleDeleteExpe
   function displayCategory(transaction){
     if(transaction?.category_id){
       let category = categories.filter((cat) => cat.id === transaction.category_id)
-      return <Td>{category[0].title}</Td>
+      return <Td>{category[0]?.title}</Td>
     }
     else{
       return <Td>Income</Td>

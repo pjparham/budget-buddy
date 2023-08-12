@@ -57,7 +57,7 @@ const Category = () => {
               "category_id": id
             })
             toast({
-              title: `Created ${expenseForm.name} expense`,
+              title: 'Created expense',
               status: "success",
               position: "bottom",
               isClosable: true,
