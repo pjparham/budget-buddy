@@ -90,16 +90,18 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                 <div className='progress-text'>
                     
                         {isEditingTitle ? 
-                            <Editable defaultValue={category.title} fontSize='md'>
+                            <Editable defaultValue={category.title} fontSize='md' mt='2'>
+                            <div>
                                 <EditablePreview />
-                                <EditableInput name="title"
+                                <EditableInput name="title" size='sm'
                                 onChange={(e) => setNewTitle(e.target.value)}/>
-                                <div>
-                              <ButtonGroup justifyContent='center' size='sm'>
+                            </div>
+                             
+                              <ButtonGroup justifyContent='center' size='sm' mt='2'>
                                     <IconButton icon={<BiCheck />} onClick={patchTitleCategory}/>
                                     <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingTitle(false)} />
                               </ButtonGroup>
-                                </div>
+                        
                               </Editable> :
                               <Button leftIcon={<BiSolidEdit />} onClick={() => setIsEditingTitle(true)}> 
                                 <Heading size='md'>{category.title}</Heading>
@@ -108,15 +110,15 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                             
                         {isEditingAmount ? 
                          <Editable defaultValue={category.amount} fontSize='md'>
-                         <EditablePreview />
-                         <EditableInput name="amount"
-                         onChange={(e) => setNewAmount(e.target.value)}/>
                          <div>
-                            <ButtonGroup justifyContent='center' size='sm'>
+                            <EditablePreview />
+                            <EditableInput name="amount"
+                            onChange={(e) => setNewAmount(e.target.value)}/>
+                         </div>
+                            <ButtonGroup justifyContent='center' size='sm' mt='2'>
                                     <IconButton icon={<BiCheck />} onClick={patchAmountCategory}/>
                                     <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingAmount(false)} />
                             </ButtonGroup>
-                         </div>
                          </Editable> : 
                             <Button leftIcon={<BiSolidEdit />} onClick={() => setIsEditingAmount(true)}>
                                 <Text>${category.amount} Budgeted</Text>

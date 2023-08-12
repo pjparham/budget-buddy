@@ -255,7 +255,7 @@ const Budget = ({ setUser, user }) => {
           .then((newExpense) => addExpense(newExpense))
           setExpenseForm({
             "title": "",
-            "amount": "",
+            "amount": 0,
             "category_id": categories[0].id
           })
           toast({
