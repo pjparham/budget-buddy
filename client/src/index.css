@@ -71,3 +71,32 @@ ul {
 .progress-text:nth-of-type(2) :nth-child(2) {
   color: hsl(var(--muted));
 }
+
+.grid-md {
+  justify-content: center;
+  display: -ms-grid;
+  display: grid;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.grid-lg {
+  display: -ms-grid;
+  display: grid;
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+.flex-lg {
+  justify-content: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  gap: var(--space-lg);
+}
+

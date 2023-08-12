@@ -205,6 +205,8 @@ const Budget = ({ setUser, user }) => {
       })
     }
 
+
+
     function postIncome(e){
       e.preventDefault()
       fetch('/incomes', {
@@ -285,7 +287,7 @@ const Budget = ({ setUser, user }) => {
     <>
     <Navbar setUser={setUser} user={user}/>
       {categories?.length === 0 && transactions?.length === 0 ? 
-        <Alert status='warning'
+        <Alert status='info'
           flexDirection='column'
           alignItems='center'
           justifyContent='center'
@@ -418,7 +420,7 @@ const Budget = ({ setUser, user }) => {
                   flexWrap={"wrap"}
                   mb={'4'}>
                   {categories.map((category) => (
-                    <CategoryCard fromBudget={true} key={category.id} category={category} />
+                    <CategoryCard fromBudget={true} key={category.id} category={category} categories={categories} setCategories={setCategories} />
                     ))}
               </SimpleGrid>
           </>
