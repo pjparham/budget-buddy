@@ -5,6 +5,7 @@ import BudgetChart from './BudgetChart'
 import BudgetTable from './BudgetTable'
 import CategoryCard from './CategoryCard'
 import Navbar from './Navbar'
+import Loading from './Loading'
 import { Heading,
          Text,
          Card,
@@ -24,12 +25,12 @@ import { Heading,
 
 import { IoMdAdd } from 'react-icons/io'
 
-const Budget = ({ setUser, user }) => {
+const Budget = ({ setUser, user, categories, setCategories }) => {
   const { id } = useParams()
   const toast = useToast()
 
   const [budget, setBudget] = useState();
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [incomes, setIncomes] = useState([])
   const [remainingAmount, setRemainingAmount] = useState()
@@ -276,6 +277,15 @@ const Budget = ({ setUser, user }) => {
     }, 0)
 
     const progressBar = 100 - (remainingAmount / totalIncome) * 100
+
+    if (!budget){
+      return (
+        <>
+          <Navbar setUser={setUser} user={user}/>
+          <Loading/>
+        </>
+      )
+    }
 
   return (
     <>
