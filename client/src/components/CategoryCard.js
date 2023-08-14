@@ -21,16 +21,14 @@ import { BiSolidEdit, BiCheck } from 'react-icons/bi'
 import { AiOutlineClose } from 'react-icons/ai'
 import { BsTrash3Fill } from 'react-icons/bs'
 
-const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
+const CategoryCard = ({ category, fromBudget, categories, setCategories, handleDeleteCategoryCard }) => {
     const [isEditingTitle, setIsEditingTitle] = useState(false)
     const [isEditingAmount, setIsEditingAmount] = useState(false)
-    const [newAmount, setNewAmount] = useState(category.amount)
-    const [newTitle, setNewTitle] = useState(category.title)
+    const [categoryToDelete, setCategoryToDelete] = useState(category)
     const [newCategory, setNewCategory] = useState(category)
     const navigate = useNavigate()
     const toast = useToast()
 
-    console.log(categories)
     //initates accumulator for total spent
     let totalSpent = 0
     if(category){
@@ -42,7 +40,8 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
         navigate(`/categories/${catId}`)
       }
 
-    // Editable functions
+      console.log(category.id)
+    
     function handleChangeCategoryTitle(e){
         setNewCategory({...newCategory, title: e.target.value})
     }
@@ -53,7 +52,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
 
 
     //CRUD functions
-    function handleDeleteBudget(){
+    function handleDeleteCategory(){
         fetch(`/categories/${category.id}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" }
@@ -61,7 +60,6 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
         .then((r) => {
             if(r.ok){
                 r.json()
-                .then(navigate('/home'))
                 setCategories(categories?.filter((cat) => cat.id !== category.id))
                 toast({
                     title: 'Deleted Category',
@@ -198,7 +196,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                     <Progress colorScheme='green' hasStripe max={category.amount} value={totalSpent}></Progress>
                 </CardBody>
                 <div className="progress-text">
-                    <small>${totalSpent} spent</small>
+                    <small>${totalSpent.toFixed(2)} spent</small>
                     <small>${category.amount - totalSpent} remaining</small>
                 </div>
                 <CardFooter justifyContent={'center'} >
@@ -207,11 +205,11 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                         onClick={() => categoryLink(category.id)}>View Details</Button> 
                         <Button size='sm' bgColor='red.400'
                             leftIcon={<BsTrash3Fill/>}
-                            onClick={handleDeleteBudget}>Delete</Button>
+                            onClick={handleDeleteCategory}>Delete</Button>
                         </ButtonGroup> :
                         <Button size='sm' bgColor='red.400'
                         leftIcon={<BsTrash3Fill/>}
-                        onClick={handleDeleteBudget}>Delete</Button>}
+                        onClick={() => handleDeleteCategoryCard(category)}>Delete</Button>}
                 </CardFooter>
             </Card>
         </>
