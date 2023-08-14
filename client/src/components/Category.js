@@ -21,6 +21,7 @@ import { Heading,
          useToast,
          } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
+import { BiArrowBack } from 'react-icons/bi'
 
 const Category = ({  user, setUser }) => {
     const navigate = useNavigate()
@@ -141,6 +142,8 @@ const Category = ({  user, setUser }) => {
       </>
     )
   }
+
+
   return (
     <>
         <Navbar setUser={setUser} user={user}/>
@@ -148,6 +151,8 @@ const Category = ({  user, setUser }) => {
         <Flex justifyContent='center' flexWrap='wrap'>
               <Box flex='65%' pr='4' maxWidth='33%' mb='4'>
                 <CategoryCard fromBudget={false} key={category.id} category={category} handleDeleteCategoryCard={handleDeleteCategoryCard}/>
+                <Button leftIcon={<BiArrowBack/>} mt='6' rounded='full' colorScheme='green' size='md' bg='green.400'
+                onClick={() => navigate(`/budgets/${category.budget_id}`)}>Back To Budget</Button>
               </Box>
             <Box flex='30%' maxWidth='30%'>
             <Card>
