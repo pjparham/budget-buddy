@@ -45,8 +45,6 @@ useEffect(() => {
     fetchUserData();
   }, []);
 
-  // console.log(user)
-
   return (
     <AnimatePresence>
         <Routes location={location} key={location.pathname}>

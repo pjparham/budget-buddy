@@ -21,15 +21,14 @@ import { BiSolidEdit, BiCheck } from 'react-icons/bi'
 import { AiOutlineClose } from 'react-icons/ai'
 import { BsTrash3Fill } from 'react-icons/bs'
 
-const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
+const CategoryCard = ({ category, fromBudget, categories, setCategories, handleDeleteCategoryCard }) => {
     const [isEditingTitle, setIsEditingTitle] = useState(false)
     const [isEditingAmount, setIsEditingAmount] = useState(false)
-    const [newAmount, setNewAmount] = useState(category.amount)
-    const [newTitle, setNewTitle] = useState(category.title)
+    const [categoryToDelete, setCategoryToDelete] = useState(category)
+    const [newCategory, setNewCategory] = useState(category)
     const navigate = useNavigate()
     const toast = useToast()
 
-    console.log(categories)
     //initates accumulator for total spent
     let totalSpent = 0
     if(category){
@@ -41,9 +40,19 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
         navigate(`/categories/${catId}`)
       }
 
+      console.log(category.id)
+    
+    function handleChangeCategoryTitle(e){
+        setNewCategory({...newCategory, title: e.target.value})
+    }
+
+    function handleChangeCategoryAmount(e){
+        setNewCategory({...newCategory, amount: e.target.value})
+    }
+
 
     //CRUD functions
-    function handleDeleteBudget(){
+    function handleDeleteCategory(){
         fetch(`/categories/${category.id}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" }
@@ -51,7 +60,6 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
         .then((r) => {
             if(r.ok){
                 r.json()
-                .then(navigate('/home'))
                 setCategories(categories?.filter((cat) => cat.id !== category.id))
                 toast({
                     title: 'Deleted Category',
@@ -60,7 +68,13 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                     isClosable: true,
                 })
             } else {
-                r.json().then(e => console.log(e))
+                r.json().then(e => toast({
+                    title: `${r.status} ${e.error}`,
+                    status: "error",
+                    position: "top",
+                    isClosable: true,
+                    })
+                )
             }
         })
     }
@@ -69,25 +83,37 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
         fetch(`/categories/${category.id}`, {
             method: "PATCH",
             headers: {"Content-Type": 'application/json'},
-            body: JSON.stringify(newTitle)
+            body: JSON.stringify(newCategory)
         })
         .then((r) => {
             if(r.ok){
                 r.json()
-                .then((newTitle) => {
-                const updatedCategories = categories.map((cat) => {
+                .then((newCat) => {
+                const updatedCategories = categories?.map((cat) => {
                     if(cat.id === category.id){
-                        cat.title = newTitle
+                        cat.title = newCat.title
+                        toast({
+                            title: 'Updated Category',
+                            status: "success",
+                            position: "top",
+                            isClosable: true,
+                        })
+                        setIsEditingTitle(false)
                         return cat
                     } else {
-                        console.log(category, cat)
                         return cat
                     }
                 })
                 setCategories(updatedCategories)
             })
             } else {
-                r.json().then(e => console.log(e))
+                r.json().then(e => toast({
+                    title: `${r.status} ${e.error}`,
+                    status: "error",
+                    position: "top",
+                    isClosable: true,
+                    })
+                    )
             }
         })
     }
@@ -96,13 +122,29 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
         fetch(`/categories/${category.id}`, {
             method: "PATCH",
             headers: {"Content-Type": 'application/json'},
-            body: JSON.stringify(newAmount)
+            body: JSON.stringify(newCategory)
         })
         .then((r) => {
             if(r.ok){
                 r.json()
-                setCategories({...category, amount: newAmount})
-                setIsEditingAmount(false)
+                .then((newCat) => {
+                    const updatedCategories = categories?.map((cat) => {
+                        if(cat.id === category.id){
+                            cat.amount = newCat.amount
+                            toast({
+                                title: 'Updated Category',
+                                status: "success",
+                                position: "top",
+                                isClosable: true,
+                            })
+                            setIsEditingAmount(false)
+                            return cat
+                        } else {
+                            return cat
+                        }
+                    })
+                    setCategories(updatedCategories)
+                })
             } else {
                 r.json().then(e => console.log(e))
             }
@@ -120,7 +162,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                             <div>
                                 <EditablePreview />
                                 <EditableInput name="title" size='sm'
-                                onChange={(e) => setNewTitle(e.target.value)}/>
+                                onChange={handleChangeCategoryTitle}/>
                             </div>
                              
                               <ButtonGroup justifyContent='center' size='sm' mt='2'>
@@ -139,7 +181,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                          <div>
                             <EditablePreview />
                             <EditableInput name="amount"
-                            onChange={(e) => setNewAmount(e.target.value)}/>
+                            onChange={handleChangeCategoryAmount}/>
                          </div>
                             <ButtonGroup justifyContent='center' size='sm' mt='2'>
                                     <IconButton icon={<BiCheck />} onClick={patchAmountCategory}/>
@@ -154,7 +196,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                     <Progress colorScheme='green' hasStripe max={category.amount} value={totalSpent}></Progress>
                 </CardBody>
                 <div className="progress-text">
-                    <small>${totalSpent} spent</small>
+                    <small>${totalSpent.toFixed(2)} spent</small>
                     <small>${category.amount - totalSpent} remaining</small>
                 </div>
                 <CardFooter justifyContent={'center'} >
@@ -163,11 +205,11 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                         onClick={() => categoryLink(category.id)}>View Details</Button> 
                         <Button size='sm' bgColor='red.400'
                             leftIcon={<BsTrash3Fill/>}
-                            onClick={handleDeleteBudget}>Delete</Button>
+                            onClick={handleDeleteCategory}>Delete</Button>
                         </ButtonGroup> :
                         <Button size='sm' bgColor='red.400'
                         leftIcon={<BsTrash3Fill/>}
-                        onClick={handleDeleteBudget}>Delete</Button>}
+                        onClick={() => handleDeleteCategoryCard(category)}>Delete</Button>}
                 </CardFooter>
             </Card>
         </>

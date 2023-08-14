@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import CategoryCard from './CategoryCard'
 import Navbar from './Navbar'
 import BudgetTable from './BudgetTable'
@@ -18,10 +18,12 @@ import { Heading,
          NumberInputStepper,
          NumberInput,
          NumberInputField,
-         useToast } from '@chakra-ui/react'
+         useToast, 
+         } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
 
 const Category = ({  user, setUser }) => {
+    const navigate = useNavigate()
     const { id } = useParams()
     const [expenseForm, setExpenseForm] = useState({
       "title": "",
@@ -35,6 +37,37 @@ const Category = ({  user, setUser }) => {
       setExpenseForm({
         ...expenseForm,
         [e.target.name]: e.target.value,
+      })
+    }
+
+    function handleDeleteCategoryCard(deletedCategory){
+      fetch(`/categories/${deletedCategory.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      })
+      .then((r) => {
+        if(r.ok){
+          r.json()
+          .then((deletedCategory) => {
+            setUser({...user, categories: user.categories?.filter((category) => category.id !== deletedCategory.id)})
+          })
+          navigate(`/budgets/${user.budgets[0].id}`)
+          toast({
+            title: `Deleted ${deletedCategory.title} category`,
+            status: "success",
+            position: "bottom",
+            isClosable: true,
+          })
+        } else {
+          r.json().then(e =>
+            toast({
+              title: `${r.status} ${e.error}`,
+              status: "error",
+              position: "top",
+              isClosable: true,
+            })
+          )
+        }
       })
     }
 
@@ -84,8 +117,6 @@ const Category = ({  user, setUser }) => {
         })
     }, [])
 
-    console.log(expenseForm)
-
   if (!category){
     return (
       <>
@@ -116,7 +147,7 @@ const Category = ({  user, setUser }) => {
         <br />
         <Flex justifyContent='center' flexWrap='wrap'>
               <Box flex='65%' pr='4' maxWidth='33%' mb='4'>
-                <CategoryCard fromBudget={false} key={category.id} category={category} />
+                <CategoryCard fromBudget={false} key={category.id} category={category} handleDeleteCategoryCard={handleDeleteCategoryCard}/>
               </Box>
             <Box flex='30%' maxWidth='30%'>
             <Card>
@@ -150,4 +181,3 @@ const Category = ({  user, setUser }) => {
 }
 
 export default Category
-
