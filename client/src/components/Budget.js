@@ -119,6 +119,15 @@ const Budget = ({ setUser, user }) => {
     setRemainingAmount(newRemainingAmount)
   }
 
+  function onDeleteCategory(deletedCategory){
+    let updatedCategories = categories.filter((cat) => cat.id !== deletedCategory.id)
+    setCategories(updatedCategories)
+    let allExpenses = transactions.filter((transaction) => transaction.category_id)
+    let updatedExpenses = allExpenses.filter((expense) => expense.category_id !== deletedCategory.id)
+    let updatedTransactions = [incomes, updatedExpenses]
+    setTransactions(updatedTransactions.flat())
+  }
+
     useEffect(() => {
         fetch(`/budgets/${id}`)
         .then(res => res.json())
@@ -442,7 +451,7 @@ const Budget = ({ setUser, user }) => {
                   flexWrap={"wrap"}
                   mb={'4'}>
                   {categories.map((category) => (
-                    <CategoryCard fromBudget={true} key={category.id} category={category} categories={categories} setCategories={setCategories} />
+                    <CategoryCard onDeleteCategory={onDeleteCategory}fromBudget={true} key={category.id} category={category} categories={categories} setCategories={setCategories} />
                     ))}
               </SimpleGrid>
           </>
