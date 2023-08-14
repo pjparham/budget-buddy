@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Card,
          Heading,
          CardBody,
@@ -14,6 +14,13 @@ import { Card,
          EditableTextarea,
          EditablePreview,
          useToast,
+         useDisclosure,
+         AlertDialog,
+         AlertDialogBody,
+         AlertDialogOverlay,
+         AlertDialogFooter,
+         AlertDialogHeader,
+         AlertDialogContent,
         } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom' 
 import { GiTakeMyMoney } from 'react-icons/gi'
@@ -22,12 +29,14 @@ import { AiOutlineClose } from 'react-icons/ai'
 import { BsTrash3Fill } from 'react-icons/bs'
 
 const CategoryCard = ({ category, fromBudget, categories, setCategories, handleDeleteCategoryCard }) => {
+    const [open, setOpen] = useState(false)
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const [isEditingTitle, setIsEditingTitle] = useState(false)
     const [isEditingAmount, setIsEditingAmount] = useState(false)
-    const [categoryToDelete, setCategoryToDelete] = useState(category)
     const [newCategory, setNewCategory] = useState(category)
     const navigate = useNavigate()
     const toast = useToast()
+    const cancelRef = useRef()
 
     //initates accumulator for total spent
     let totalSpent = 0
@@ -40,7 +49,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
         navigate(`/categories/${catId}`)
       }
 
-      console.log(category.id)
+      console.log(category)
     
     function handleChangeCategoryTitle(e){
         setNewCategory({...newCategory, title: e.target.value})
@@ -205,11 +214,60 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                         onClick={() => categoryLink(category.id)}>View Details</Button> 
                         <Button size='sm' bgColor='red.400'
                             leftIcon={<BsTrash3Fill/>}
-                            onClick={handleDeleteCategory}>Delete</Button>
-                        </ButtonGroup> :
+                            onClick={onOpen}>Delete</Button>
+                        <AlertDialog
+                            isOpen={isOpen}
+                            leastDestructiveRef={cancelRef}
+                            onClose={onClose}>
+                        <AlertDialogOverlay>
+                          <AlertDialogContent>
+                            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                              Delete Budget
+                            </AlertDialogHeader>
+                            <AlertDialogBody>
+                              Are you sure? You can't undo this action afterwards.
+                            </AlertDialogBody>
+                            <AlertDialogFooter>
+                              <Button ref={cancelRef} onClick={onClose}>
+                                Cancel
+                              </Button>
+                              <Button colorScheme='red' onClick={handleDeleteCategory} ml={3}>
+                                Delete
+                              </Button>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                            </AlertDialogOverlay>
+                        </AlertDialog>
+                            </ButtonGroup>
+                         :
+                         <>
                         <Button size='sm' bgColor='red.400'
                         leftIcon={<BsTrash3Fill/>}
-                        onClick={() => handleDeleteCategoryCard(category)}>Delete</Button>}
+                        onClick={() => setOpen(!open)}>Delete</Button>
+                        <AlertDialog
+                            isOpen={open}
+                            leastDestructiveRef={cancelRef}
+                            onClose={onClose}>
+                        <AlertDialogOverlay>
+                          <AlertDialogContent>
+                            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                              Delete Budget
+                            </AlertDialogHeader>
+                            <AlertDialogBody>
+                              Are you sure? You can't undo this action afterwards.
+                            </AlertDialogBody>
+                            <AlertDialogFooter>
+                              <Button ref={cancelRef} onClick={() => setOpen(!open)}>
+                                Cancel
+                              </Button>
+                              <Button colorScheme='red' onClick={() => handleDeleteCategoryCard(category)} ml={3}>
+                                Delete
+                              </Button>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialogOverlay>
+                        </AlertDialog>
+                        </>}
                 </CardFooter>
             </Card>
         </>
