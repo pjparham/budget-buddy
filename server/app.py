@@ -43,14 +43,6 @@ def authorized(func):
     return wrapper
 
 class Users(Resource):
-    def get(self):
-        name = request.json['name']
-        user = User.query.filter_by(name=name).first()
-        if not user:
-            return make_response(jsonify({'error': 'user not found'}), HTTP_NOT_FOUND)
-        user_dict = user.to_dict()
-        return make_response(jsonify(user_dict), HTTP_SUCCESS)
-    
     def post(self):
         #creates new user
         data = request.get_json()
@@ -464,15 +456,6 @@ class CheckSession(Resource):
         return {'error': '401 Unauthroized'}, HTTP_UNAUTHORIZED
     
 api.add_resource(CheckSession, '/check_session')
-
-class Testing(Resource):
-    def get(self):
-        user = User.query.first()
-        print(session['user_id'])
-        return make_response(jsonify(user.to_dict()), HTTP_SUCCESS)
-    
-api.add_resource(Testing, '/testing')
-
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
