@@ -26,6 +26,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
     const [isEditingAmount, setIsEditingAmount] = useState(false)
     const [newAmount, setNewAmount] = useState(category.amount)
     const [newTitle, setNewTitle] = useState(category.title)
+    const [newCategory, setNewCategory] = useState(category)
     const navigate = useNavigate()
     const toast = useToast()
 
@@ -40,6 +41,15 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
     function categoryLink(catId){
         navigate(`/categories/${catId}`)
       }
+
+    // Editable functions
+    function handleChangeCategoryTitle(e){
+        setNewCategory({...newCategory, title: e.target.value})
+    }
+
+    function handleChangeCategoryAmount(e){
+        setNewCategory({...newCategory, amount: e.target.value})
+    }
 
 
     //CRUD functions
@@ -60,7 +70,13 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                     isClosable: true,
                 })
             } else {
-                r.json().then(e => console.log(e))
+                r.json().then(e => toast({
+                    title: `${r.status} ${e.error}`,
+                    status: "error",
+                    position: "top",
+                    isClosable: true,
+                    })
+                )
             }
         })
     }
@@ -69,25 +85,37 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
         fetch(`/categories/${category.id}`, {
             method: "PATCH",
             headers: {"Content-Type": 'application/json'},
-            body: JSON.stringify(newTitle)
+            body: JSON.stringify(newCategory)
         })
         .then((r) => {
             if(r.ok){
                 r.json()
-                .then((newTitle) => {
-                const updatedCategories = categories.map((cat) => {
+                .then((newCat) => {
+                const updatedCategories = categories?.map((cat) => {
                     if(cat.id === category.id){
-                        cat.title = newTitle
+                        cat.title = newCat.title
+                        toast({
+                            title: 'Updated Category',
+                            status: "success",
+                            position: "top",
+                            isClosable: true,
+                        })
+                        setIsEditingTitle(false)
                         return cat
                     } else {
-                        console.log(category, cat)
                         return cat
                     }
                 })
                 setCategories(updatedCategories)
             })
             } else {
-                r.json().then(e => console.log(e))
+                r.json().then(e => toast({
+                    title: `${r.status} ${e.error}`,
+                    status: "error",
+                    position: "top",
+                    isClosable: true,
+                    })
+                    )
             }
         })
     }
@@ -96,13 +124,29 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
         fetch(`/categories/${category.id}`, {
             method: "PATCH",
             headers: {"Content-Type": 'application/json'},
-            body: JSON.stringify(newAmount)
+            body: JSON.stringify(newCategory)
         })
         .then((r) => {
             if(r.ok){
                 r.json()
-                setCategories({...category, amount: newAmount})
-                setIsEditingAmount(false)
+                .then((newCat) => {
+                    const updatedCategories = categories?.map((cat) => {
+                        if(cat.id === category.id){
+                            cat.amount = newCat.amount
+                            toast({
+                                title: 'Updated Category',
+                                status: "success",
+                                position: "top",
+                                isClosable: true,
+                            })
+                            setIsEditingAmount(false)
+                            return cat
+                        } else {
+                            return cat
+                        }
+                    })
+                    setCategories(updatedCategories)
+                })
             } else {
                 r.json().then(e => console.log(e))
             }
@@ -120,7 +164,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                             <div>
                                 <EditablePreview />
                                 <EditableInput name="title" size='sm'
-                                onChange={(e) => setNewTitle(e.target.value)}/>
+                                onChange={handleChangeCategoryTitle}/>
                             </div>
                              
                               <ButtonGroup justifyContent='center' size='sm' mt='2'>
@@ -139,7 +183,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories }) => {
                          <div>
                             <EditablePreview />
                             <EditableInput name="amount"
-                            onChange={(e) => setNewAmount(e.target.value)}/>
+                            onChange={handleChangeCategoryAmount}/>
                          </div>
                             <ButtonGroup justifyContent='center' size='sm' mt='2'>
                                     <IconButton icon={<BiCheck />} onClick={patchAmountCategory}/>
