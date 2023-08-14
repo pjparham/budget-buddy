@@ -12,7 +12,7 @@ function AnimatedRoutes() {
     const location = useLocation()
     const [user, setUser] = useState()
     const [budgets, setBudgets] = useState([])
-
+    // const [categories, setCategories] = useState([]);
 //   useEffect(() => {
 //     fetch("/check_session")
 //     .then((r) => r.json())
@@ -53,8 +53,8 @@ useEffect(() => {
             <Route exact path='/' element={<Landing setUser={setUser}/>}/>
             <Route exact path='/login-test' element={<LoginTest setUser={setUser}/>}/>
             <Route exact path='/home' element={<Home setUser={setUser} user={user}/>}/>
-            <Route exact path='/budgets/:id' element={<Budget setUser={setUser} user={user}/>}/>
-            <Route exact path='/categories/:id' element={<Category setUser={setUser} user={user}/>}/>
+            <Route exact path='/budgets/:id' element={<Budget  setUser={setUser} user={user}/>}/>
+            <Route exact path='/categories/:id' element={<Category  setUser={setUser} user={user}/>}/>
             <Route exact path='/user/profile' element={<UserProfile setUser={setUser} user={user}/>}/>
         </Routes>
     </AnimatePresence>

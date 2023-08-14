@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import CategoryCard from './CategoryCard'
 import Navbar from './Navbar'
 import BudgetTable from './BudgetTable'
+<<<<<<< HEAD
 import { Heading, 
          Text, 
          Flex,
@@ -20,8 +21,12 @@ import { Heading,
          NumberInputField,
          useToast } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
+=======
+import { Heading, Text, Container } from '@chakra-ui/react'
+import Loading from './Loading'
+>>>>>>> main
 
-const Category = () => {
+const Category = ({  user, setUser }) => {
     const { id } = useParams()
     const [expenseForm, setExpenseForm] = useState({
       "title": "",
@@ -31,6 +36,7 @@ const Category = () => {
     const [category, setCategory] = useState()
     const toast = useToast()
 
+<<<<<<< HEAD
     function handleExpenseFormChange(e){
       setExpenseForm({
         ...expenseForm,
@@ -75,6 +81,13 @@ const Category = () => {
        })
       }
         
+=======
+    //   useEffect(() => { 
+    //    let thisCategory = categories.find(cat => cat.id === parseInt(id))
+    //     setCategory(thisCategory)
+    // }, [])
+
+>>>>>>> main
 
     useEffect(() => { 
         fetch(`/categories/${id}`)
@@ -84,6 +97,7 @@ const Category = () => {
         })
     }, [])
 
+<<<<<<< HEAD
     console.log(expenseForm)
 
   if (!category){
@@ -107,12 +121,20 @@ const Category = () => {
         Loading...
         </Text>
     </Heading>
+=======
+    // console.log(category)
+  if (!category){
+    return (
+      <>
+        <Navbar setUser={setUser} user={user}/>
+        <Loading/>
+>>>>>>> main
       </>
     )
   }
   return (
     <>
-        <Navbar />
+        <Navbar setUser={setUser} user={user}/>
         <br />
         <Flex justifyContent='center' flexWrap='wrap'>
               <Box flex='65%' pr='4' maxWidth='33%' mb='4'>
