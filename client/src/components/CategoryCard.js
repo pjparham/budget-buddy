@@ -212,7 +212,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                     {fromBudget ? <ButtonGroup spacing='4'>
                     <Button colorScheme='green' size='sm' rounded='full' bg='green.400' leftIcon={<GiTakeMyMoney />}
                         onClick={() => categoryLink(category.id)}>View Details</Button> 
-                        <Button size='sm' bgColor='red.400'
+                        <Button size='sm' colorScheme='red' bgColor='red.400'
                             rounded='full'
                             leftIcon={<BsTrash3Fill/>}
                             onClick={onOpen}>Delete</Button>
