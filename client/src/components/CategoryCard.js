@@ -28,7 +28,7 @@ import { BiSolidEdit, BiCheck } from 'react-icons/bi'
 import { AiOutlineClose } from 'react-icons/ai'
 import { BsTrash3Fill } from 'react-icons/bs'
 
-const CategoryCard = ({ category, fromBudget, categories, setCategories, handleDeleteCategoryCard }) => {
+const CategoryCard = ({ category, fromBudget, categories, setCategories, handleDeleteCategoryCard, onDeleteCategory}) => {
     const [open, setOpen] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isEditingTitle, setIsEditingTitle] = useState(false)
@@ -69,7 +69,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
         .then((r) => {
             if(r.ok){
                 r.json()
-                setCategories(categories?.filter((cat) => cat.id !== category.id))
+                fromBudget ? onDeleteCategory(category) : setCategories(categories?.filter((cat) => cat.id !== category.id))
                 toast({
                     title: 'Deleted Category',
                     status: "success",
