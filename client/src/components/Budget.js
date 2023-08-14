@@ -21,14 +21,17 @@ import { Heading,
          NumberIncrementStepper,
          NumberDecrementStepper,
          Select,
+         Alert,
+         AlertIcon,
+         AlertTitle,
+         AlertDescription,
          useToast } from '@chakra-ui/react'
-
 import { IoMdAdd } from 'react-icons/io'
+
 
 const Budget = ({ setUser, user }) => {
   const { id } = useParams()
   const toast = useToast()
-
   const [budget, setBudget] = useState();
   const [categories, setCategories] = useState([]);
   const [transactions, setTransactions] = useState([]);
@@ -214,6 +217,8 @@ const Budget = ({ setUser, user }) => {
       })
     }
 
+
+
     function postIncome(e){
       e.preventDefault()
       fetch('/incomes', {
@@ -262,7 +267,7 @@ const Budget = ({ setUser, user }) => {
           .then((newExpense) => addExpense(newExpense))
           setExpenseForm({
             "title": "",
-            "amount": "",
+            "amount": 0,
             "category_id": categories[0].id
           })
           toast({
@@ -271,7 +276,7 @@ const Budget = ({ setUser, user }) => {
             position: "top",
             isClosable: true,
           })
-        } else{
+        } else {
           r.json().then(e =>
             toast({
               title: `${r.status} ${e.error}`,
@@ -303,6 +308,15 @@ const Budget = ({ setUser, user }) => {
   return (
     <>
     <Navbar setUser={setUser} user={user}/>
+      {categories?.length === 0 && transactions?.length === 0 ? 
+        <Alert status='info'
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+          textAlign='center'>
+        <AlertIcon />
+        <AlertTitle>To get started, add your income first</AlertTitle>
+        </Alert> : null}
         <Heading
             as={motion.h1}
             initial={{ opacity: 0, y: 100 }}
@@ -330,33 +344,6 @@ const Budget = ({ setUser, user }) => {
       <Reorder.Item key={items[0]} value={items[0]}>
         <Card>
           <CardHeader>
-            <Heading size='md'>Add New Category</Heading>
-          </CardHeader>
-          <CardBody>
-            <Text>Category Name</Text>
-            <Input placeholder="e.g. Groceries" name="title" value={categoryForm.title} onChange={handleCategoryFormChange}/>
-            <Text>Amount</Text>
-            <NumberInput min={0}>
-              <NumberInputField placeholder="e.g. 350" name="amount" value={categoryForm.amount} onChange={handleCategoryFormChange}/>
-              <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </CardBody>
-          <CardFooter justifyContent='center'>
-          <Button colorScheme='green'
-                    bg={'green.400'}
-                    rounded={'full'}
-                    leftIcon={<IoMdAdd/>}
-                    onClick={postCategory}
-                    >Add Category</Button>
-          </CardFooter>
-        </Card>
-      </Reorder.Item>
-      <Reorder.Item key={items[1]} value={items[1]}>
-        <Card>
-          <CardHeader>
             <Heading size='md'>Add Income</Heading>
           </CardHeader>
           <CardBody>
@@ -381,6 +368,33 @@ const Budget = ({ setUser, user }) => {
           </CardFooter>
         </Card>
       </Reorder.Item>
+      <Reorder.Item key={items[1]} value={items[1]}>
+        <Card>
+          <CardHeader>
+            <Heading size='md'>Add New Category</Heading>
+          </CardHeader>
+          <CardBody>
+            <Text>Category Name</Text>
+            <Input placeholder="e.g. Groceries" name="title" value={categoryForm.title} onChange={handleCategoryFormChange}/>
+            <Text>Amount</Text>
+            <NumberInput min={0}>
+              <NumberInputField placeholder="e.g. 350" name="amount" value={categoryForm.amount} onChange={handleCategoryFormChange}/>
+              <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </CardBody>
+          <CardFooter justifyContent='center'>
+          <Button colorScheme='green'
+                    bg={'green.400'}
+                    rounded={'full'}
+                    leftIcon={<IoMdAdd/>}
+                    onClick={postCategory}
+                    >Add Category</Button>
+          </CardFooter>
+        </Card>
+      </Reorder.Item>
       <Reorder.Item key={items[2]} value={items[2]}>
       <Card>
         <CardHeader>
@@ -391,7 +405,7 @@ const Budget = ({ setUser, user }) => {
           <Input placeholder="e.g. Coffee" name="title" value={expenseForm.title} onChange={handleExpenseFormChange}/>
           <Text>Amount</Text>
           <NumberInput min={0}>
-          <NumberInputField name="amount" value={expenseForm.amount} onChange={handleExpenseFormChange}placeholder="e.g. 3.50" /> 
+          <NumberInputField name="amount" value={expenseForm.amount === null ? "" : expenseForm.amount} onChange={handleExpenseFormChange}placeholder="e.g. 3.50" /> 
           <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />
@@ -428,7 +442,7 @@ const Budget = ({ setUser, user }) => {
                   flexWrap={"wrap"}
                   mb={'4'}>
                   {categories.map((category) => (
-                    <CategoryCard fromBudget={true} key={category.id} category={category} />
+                    <CategoryCard fromBudget={true} key={category.id} category={category} categories={categories} setCategories={setCategories} />
                     ))}
               </SimpleGrid>
           </>

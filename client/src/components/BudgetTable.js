@@ -83,9 +83,9 @@ export default function BudgetTable({ fromBudget, transactions, handleDeleteExpe
 
 
   function displayCategory(transaction){
-    if(transaction.category_id){
+    if(transaction?.category_id){
       let category = categories.filter((cat) => cat.id === transaction.category_id)
-      return <Td>{category[0].title}</Td>
+      return <Td>{category[0]?.title}</Td>
     }
     else{
       return <Td>Income</Td>
@@ -110,7 +110,7 @@ export default function BudgetTable({ fromBudget, transactions, handleDeleteExpe
               <Tr key={transaction.title}>
               <Td>{transaction?.title}</Td>
               <Td>{transaction?.created_at?.slice(0, 16)}</Td>
-              <Td color={transaction.category_id ? "red.600" : "green.700"}>{transaction?.amount}</Td>
+              <Td color={transaction?.category_id ? "red.600" : "green.700"}>{transaction?.amount}</Td>
               {fromBudget ? displayCategory(transaction) : null}
               {fromBudget ? <Td><IconButton
                       colorScheme='red'
