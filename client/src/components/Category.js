@@ -18,7 +18,7 @@ import { Heading,
          NumberInputStepper,
          NumberInput,
          NumberInputField,
-         useToast, 
+         useToast,
          } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
 
@@ -51,7 +51,7 @@ const Category = ({  user, setUser }) => {
           .then((deletedCategory) => {
             setUser({...user, categories: user.categories?.filter((category) => category.id !== deletedCategory.id)})
           })
-          navigate(`/budgets/${user.budgets[0].id}`)
+          navigate(`/budgets/${deletedCategory.budget_id}`)
           toast({
             title: `Deleted ${deletedCategory.title} category`,
             status: "success",
