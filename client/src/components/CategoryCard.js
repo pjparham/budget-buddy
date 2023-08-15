@@ -186,8 +186,8 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                     <Progress colorScheme={category.amount > totalSpent ? 'green' : 'red'} hasStripe max={category.amount} value={totalSpent}></Progress>
                 </CardBody>
                 <div className="progress-text">
-                    <small>${totalSpent.toFixed(2)} spent</small>
-                    <small>${category.amount - totalSpent} remaining</small>
+                    <Text>${totalSpent.toFixed(2)} spent</Text>
+                    <Text>${category.amount - totalSpent} remaining</Text>
                 </div>
                 <CardFooter justifyContent={'center'} >
                     {fromBudget ? <ButtonGroup spacing='4'>
