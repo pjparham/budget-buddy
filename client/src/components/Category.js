@@ -108,7 +108,68 @@ const Category = ({  user, setUser }) => {
           }
        })
       }
-        
+
+      function patchCategoryTitle(patchedCategory){
+        fetch(`/categories/${id}`, {
+          method: "PATCH",
+          headers: {"Content-Type": 'application/json'},
+          body: JSON.stringify(patchedCategory)
+        })
+        .then((r) => {
+          if(r.ok){
+            r.json()
+            .then((updatedCategory) => {
+              setCategory(updatedCategory)
+            })
+            toast({
+              title: 'Updated category title',
+              status: "success",
+              position: "bottom",
+              isClosable: true,
+            })
+          } else {
+            r.json().then(e =>
+              toast({
+                title: `${r.status} ${e.error}`,
+                status: "error",
+                position: "top",
+                isClosable: true,
+              })
+            )
+          }
+        })
+      }
+
+      function patchCategoryAmount(patchedCategory){
+        fetch(`/categories/${id}`, {
+          method: "PATCH",
+          headers: {"Content-Type": 'application/json'},
+          body: JSON.stringify(patchedCategory)
+        })
+        .then((r) => {
+          if(r.ok){
+            r.json()
+            .then((updatedCategory) => {
+              setCategory(updatedCategory)
+            })
+            toast({
+              title: 'Updated category amount',
+              status: "success",
+              position: "bottom",
+              isClosable: true,
+            })
+          } else {
+            r.json().then(e =>
+              toast({
+                title: `${r.status} ${e.error}`,
+                status: "error",
+                position: "top",
+                isClosable: true,
+              })
+            )
+          }
+        })
+      } 
 
     useEffect(() => { 
         fetch(`/categories/${id}`)
@@ -116,7 +177,7 @@ const Category = ({  user, setUser }) => {
         .then(category => {
             setCategory(category)
         })
-    }, [])
+    }, [id])
 
   if (!category){
     return (
@@ -153,7 +214,7 @@ const Category = ({  user, setUser }) => {
         </Box>
         <Flex justifyContent='center' flexWrap='wrap'>
               <Box flex='65%' pr='4' maxWidth='33%' mb='4'>
-                <CategoryCard fromBudget={false} key={category.id} category={category} handleDeleteCategoryCard={handleDeleteCategoryCard}/>
+                <CategoryCard fromBudget={false} key={category.id} category={category} handleDeleteCategoryCard={handleDeleteCategoryCard} editTitle={patchCategoryTitle} editAmount={patchCategoryAmount}/>
               </Box>
             <Box flex='30%' maxWidth='30%'>
             <Card>

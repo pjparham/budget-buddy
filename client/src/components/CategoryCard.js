@@ -8,10 +8,8 @@ import { Card,
          ButtonGroup,
          Progress,
          IconButton,
-         useEditableControls,
          Editable,
          EditableInput,
-         EditableTextarea,
          EditablePreview,
          useToast,
          useDisclosure,
@@ -28,7 +26,7 @@ import { BiSolidEdit, BiCheck } from 'react-icons/bi'
 import { AiOutlineClose } from 'react-icons/ai'
 import { BsTrash3Fill } from 'react-icons/bs'
 
-const CategoryCard = ({ category, fromBudget, categories, setCategories, handleDeleteCategoryCard, onDeleteCategory}) => {
+const CategoryCard = ({ category, fromBudget, categories, setCategories, handleDeleteCategoryCard, onDeleteCategory, editTitle, editAmount }) => {
     const [open, setOpen] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isEditingTitle, setIsEditingTitle] = useState(false)
@@ -48,8 +46,6 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
     function categoryLink(catId){
         navigate(`/categories/${catId}`)
       }
-
-      console.log(category)
     
     function handleChangeCategoryTitle(e){
         setNewCategory({...newCategory, title: e.target.value})
@@ -113,6 +109,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                         return cat
                     }
                 })
+                setNewCategory(newCat)
                 setCategories(updatedCategories)
             })
             } else {
@@ -165,7 +162,6 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
         <>
             <Card className='budget'>
                 <div className='progress-text'>
-                    
                         {isEditingTitle ? 
                             <Editable defaultValue={category.title} fontSize='md' mt='2'>
                             <div>
@@ -173,11 +169,19 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                                 <EditableInput name="title" size='sm'
                                 onChange={handleChangeCategoryTitle}/>
                             </div>
-                             
+                             {fromBudget ? 
                               <ButtonGroup justifyContent='center' size='sm' mt='2'>
-                                    <IconButton icon={<BiCheck />} onClick={patchTitleCategory}/>
-                                    <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingTitle(false)} />
-                              </ButtonGroup>
+                                <IconButton icon={<BiCheck />} onClick={patchTitleCategory}/>
+                                <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingTitle(false)} />
+                              </ButtonGroup> : 
+                             <ButtonGroup justifyContent='center' size='sm' mt='2'>
+                                <IconButton icon={<BiCheck />} onClick={() => {
+                                    editTitle(newCategory)
+                                    setIsEditingTitle(false)
+                                    }}/>
+                                <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingTitle(false)} />
+                            </ButtonGroup> 
+                            }
                         
                               </Editable> :
                               <Button leftIcon={<BiSolidEdit />} onClick={() => setIsEditingTitle(true)}> 
@@ -192,10 +196,19 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                             <EditableInput name="amount"
                             onChange={handleChangeCategoryAmount}/>
                          </div>
+                         {fromBudget ? 
                             <ButtonGroup justifyContent='center' size='sm' mt='2'>
                                     <IconButton icon={<BiCheck />} onClick={patchAmountCategory}/>
                                     <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingAmount(false)} />
+                            </ButtonGroup> :
+                            <ButtonGroup justifyContent='center' size='sm' mt='2'>
+                                    <IconButton icon={<BiCheck />} onClick={() => {
+                                        editAmount(newCategory)
+                                        setIsEditingAmount(false)
+                                    }}/>
+                                    <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingAmount(false)} />
                             </ButtonGroup>
+                         }
                          </Editable> : 
                             <Button leftIcon={<BiSolidEdit />} onClick={() => setIsEditingAmount(true)}>
                                 <Text>${category.amount} Budgeted</Text>
