@@ -32,7 +32,6 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
         .then(res => {
             if (res.ok){
                 res.json().then(setUser)
-                console.log('success')
                 return navigate("/home")
             } else {
               res.json().then(e =>

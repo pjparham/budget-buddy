@@ -213,7 +213,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                               <Button ref={cancelRef} onClick={onClose}>
                                 Cancel
                               </Button>
-                              <Button colorScheme='red' onClick={handleDeleteCategory} ml={3}>
+                              <Button colorScheme='red' bgColor='red.400' onClick={handleDeleteCategory} ml={3}>
                                 Delete
                               </Button>
                                 </AlertDialogFooter>
@@ -223,7 +223,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                             </ButtonGroup>
                          :
                          <>
-                        <Button size='sm' bgColor='red.400'
+                        <Button size='sm' colorScheme='red' bgColor='red.400'
                         rounded='full'
                         leftIcon={<BsTrash3Fill/>}
                         onClick={() => setOpen(!open)}>Delete</Button>
