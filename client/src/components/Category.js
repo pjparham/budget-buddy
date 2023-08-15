@@ -20,6 +20,7 @@ import { Heading,
          NumberInput,
          NumberInputField,
          useToast,
+         SimpleGrid
          } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
 import { BiArrowBack } from 'react-icons/bi'
@@ -153,7 +154,7 @@ const Category = ({  user, setUser }) => {
     return (
       <>
         <Navbar />
-        
+        <Loading />
       </>
     )
   }
@@ -170,11 +171,16 @@ const Category = ({  user, setUser }) => {
             </Button>
           </Link>
         </Box>
-        <Flex justifyContent='center' flexWrap='wrap'>
-              <Box flex='65%' pr='4' maxWidth='33%' mb='4'>
+        {/* <Flex justifyContent='center' flexWrap='wrap'> */}
+        <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' 
+                justifyContent={"center"}
+                display={"flex"}
+                flexWrap={"wrap"}
+                mb={'4'}>
+              {/* <Box flex='65%' pr='4' maxWidth='33%' mb='4'> */}
                 <CategoryCard fromBudget={false} key={category.id} category={category} handleDeleteCategoryCard={handleDeleteCategoryCard} editCategory={patchCategory} />
-              </Box>
-            <Box flex='30%' maxWidth='30%'>
+              {/* </Box> */}
+            {/* <Box flex='30%' maxWidth='30%'> */}
             <Card>
                 <CardHeader>
                   <Heading size='lg'>Add Expense</Heading>
@@ -197,8 +203,9 @@ const Category = ({  user, setUser }) => {
                         onClick={postExpense}>Add Expense</Button>
                 </CardBody>
             </Card>
-            </Box>
-        </Flex>
+            {/* </Box> */}
+        {/* </Flex> */}
+        </SimpleGrid>
         <br/>
         <BudgetTable fromBudget={false} transactions={category.expenses}/>
     </>
