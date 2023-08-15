@@ -183,7 +183,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                             </Button>}
                 </div>
                 <CardBody>
-                    <Progress colorScheme='green' hasStripe max={category.amount} value={totalSpent}></Progress>
+                    <Progress colorScheme={category.amount > totalSpent ? 'green' : 'red'} hasStripe max={category.amount} value={totalSpent}></Progress>
                 </CardBody>
                 <div className="progress-text">
                     <Text>${totalSpent.toFixed(2)} spent</Text>
