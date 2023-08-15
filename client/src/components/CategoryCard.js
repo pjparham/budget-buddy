@@ -26,7 +26,7 @@ import { BiSolidEdit, BiCheck } from 'react-icons/bi'
 import { AiOutlineClose } from 'react-icons/ai'
 import { BsTrash3Fill } from 'react-icons/bs'
 
-const CategoryCard = ({ category, fromBudget, categories, setCategories, handleDeleteCategoryCard, onDeleteCategory, editTitle, editAmount }) => {
+const CategoryCard = ({ category, fromBudget, categories, setCategories, handleDeleteCategoryCard, onDeleteCategory, editCategory }) => {
     const [open, setOpen] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isEditingTitle, setIsEditingTitle] = useState(false)
@@ -84,7 +84,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
         })
     }
 
-    function patchTitleCategory(){
+    function patchCategory(){
         fetch(`/categories/${category.id}`, {
             method: "PATCH",
             headers: {"Content-Type": 'application/json'},
@@ -96,7 +96,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                 .then((newCat) => {
                 const updatedCategories = categories?.map((cat) => {
                     if(cat.id === category.id){
-                        cat.title = newCat.title
+                        cat = newCat
                         toast({
                             title: 'Updated Category',
                             status: "success",
@@ -111,6 +111,8 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                 })
                 setNewCategory(newCat)
                 setCategories(updatedCategories)
+                setIsEditingAmount(false)
+                setIsEditingTitle(false)
             })
             } else {
                 r.json().then(e => toast({
@@ -122,40 +124,6 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                     )
             }
         })
-    }
-
-    function patchAmountCategory() {
-        fetch(`/categories/${category.id}`, {
-            method: "PATCH",
-            headers: {"Content-Type": 'application/json'},
-            body: JSON.stringify(newCategory)
-        })
-        .then((r) => {
-            if(r.ok){
-                r.json()
-                .then((newCat) => {
-                    const updatedCategories = categories?.map((cat) => {
-                        if(cat.id === category.id){
-                            cat.amount = newCat.amount
-                            toast({
-                                title: 'Updated Category',
-                                status: "success",
-                                position: "top",
-                                isClosable: true,
-                            })
-                            setIsEditingAmount(false)
-                            return cat
-                        } else {
-                            return cat
-                        }
-                    })
-                    setCategories(updatedCategories)
-                })
-            } else {
-                r.json().then(e => console.log(e))
-            }
-        })
-
     }
 
   return (
@@ -171,12 +139,12 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                             </div>
                              {fromBudget ? 
                               <ButtonGroup justifyContent='center' size='sm' mt='2'>
-                                <IconButton icon={<BiCheck />} onClick={patchTitleCategory}/>
+                                <IconButton icon={<BiCheck />} onClick={patchCategory}/>
                                 <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingTitle(false)} />
                               </ButtonGroup> : 
                              <ButtonGroup justifyContent='center' size='sm' mt='2'>
                                 <IconButton icon={<BiCheck />} onClick={() => {
-                                    editTitle(newCategory)
+                                    editCategory(newCategory)
                                     setIsEditingTitle(false)
                                     }}/>
                                 <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingTitle(false)} />
@@ -198,12 +166,12 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
                          </div>
                          {fromBudget ? 
                             <ButtonGroup justifyContent='center' size='sm' mt='2'>
-                                    <IconButton icon={<BiCheck />} onClick={patchAmountCategory}/>
+                                    <IconButton icon={<BiCheck />} onClick={patchCategory}/>
                                     <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingAmount(false)} />
                             </ButtonGroup> :
                             <ButtonGroup justifyContent='center' size='sm' mt='2'>
                                     <IconButton icon={<BiCheck />} onClick={() => {
-                                        editAmount(newCategory)
+                                        editCategory(newCategory)
                                         setIsEditingAmount(false)
                                     }}/>
                                     <IconButton icon={<AiOutlineClose />} onClick={() => setIsEditingAmount(false)} />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import CategoryCard from './CategoryCard'
 import Navbar from './Navbar'
 import BudgetTable from './BudgetTable'
@@ -24,7 +24,6 @@ import { IoMdAdd } from 'react-icons/io'
 import { BiArrowBack } from 'react-icons/bi'
 
 const Category = ({  user, setUser }) => {
-    const navigate = useNavigate()
     const { id } = useParams()
     const [expenseForm, setExpenseForm] = useState({
       "title": "",
@@ -33,6 +32,7 @@ const Category = ({  user, setUser }) => {
     })
     const [category, setCategory] = useState()
     const toast = useToast()
+    const navigate = useNavigate()
 
     function handleExpenseFormChange(e){
       setExpenseForm({
@@ -109,7 +109,7 @@ const Category = ({  user, setUser }) => {
        })
       }
 
-      function patchCategoryTitle(patchedCategory){
+      function patchCategory(patchedCategory){
         fetch(`/categories/${id}`, {
           method: "PATCH",
           headers: {"Content-Type": 'application/json'},
@@ -122,7 +122,7 @@ const Category = ({  user, setUser }) => {
               setCategory(updatedCategory)
             })
             toast({
-              title: 'Updated category title',
+              title: 'Updated category',
               status: "success",
               position: "bottom",
               isClosable: true,
@@ -139,37 +139,6 @@ const Category = ({  user, setUser }) => {
           }
         })
       }
-
-      function patchCategoryAmount(patchedCategory){
-        fetch(`/categories/${id}`, {
-          method: "PATCH",
-          headers: {"Content-Type": 'application/json'},
-          body: JSON.stringify(patchedCategory)
-        })
-        .then((r) => {
-          if(r.ok){
-            r.json()
-            .then((updatedCategory) => {
-              setCategory(updatedCategory)
-            })
-            toast({
-              title: 'Updated category amount',
-              status: "success",
-              position: "bottom",
-              isClosable: true,
-            })
-          } else {
-            r.json().then(e =>
-              toast({
-                title: `${r.status} ${e.error}`,
-                status: "error",
-                position: "top",
-                isClosable: true,
-              })
-            )
-          }
-        })
-      } 
 
     useEffect(() => { 
         fetch(`/categories/${id}`)
@@ -209,12 +178,16 @@ const Category = ({  user, setUser }) => {
     <>
         <Navbar setUser={setUser} user={user}/>
         <Box alignItems='flex-start' justifyContent='flex-start'>
-        <Button leftIcon={<BiArrowBack/>} mt='6' rounded='full' colorScheme='green' size='md' bg='green.400' mb='4'
-                onClick={() => navigate(`/budgets/${category.budget_id}`)}>Back To Budget</Button>
+          <Link to={`/budgets/${category.budget_id}`}>
+            <Button leftIcon={<BiArrowBack/>} mt='6' rounded='full' 
+                colorScheme='green' size='md' bg='green.400' mb='4'>
+              Back To Budget
+            </Button>
+          </Link>
         </Box>
         <Flex justifyContent='center' flexWrap='wrap'>
               <Box flex='65%' pr='4' maxWidth='33%' mb='4'>
-                <CategoryCard fromBudget={false} key={category.id} category={category} handleDeleteCategoryCard={handleDeleteCategoryCard} editTitle={patchCategoryTitle} editAmount={patchCategoryAmount}/>
+                <CategoryCard fromBudget={false} key={category.id} category={category} handleDeleteCategoryCard={handleDeleteCategoryCard} editCategory={patchCategory} />
               </Box>
             <Box flex='30%' maxWidth='30%'>
             <Card>
