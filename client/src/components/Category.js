@@ -44,7 +44,7 @@ const Category = ({  user, setUser }) => {
     }
 
     function handleDeleteCategoryCard(deletedCategory){
-      fetch(`/categories/${deletedCategory.id}`, {
+      fetch(`/api/categories/${deletedCategory.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" }
       })
@@ -76,7 +76,7 @@ const Category = ({  user, setUser }) => {
 
     function postExpense(e){
        e.preventDefault()
-       fetch('/expenses', {
+       fetch('/api/expenses', {
           method: "POST",
           headers: {"Content-Type": 'application/json'},
           body: JSON.stringify(expenseForm)
@@ -112,7 +112,7 @@ const Category = ({  user, setUser }) => {
       }
 
       function patchCategory(patchedCategory){
-        fetch(`/categories/${id}`, {
+        fetch(`/api/categories/${id}`, {
           method: "PATCH",
           headers: {"Content-Type": 'application/json'},
           body: JSON.stringify(patchedCategory)
@@ -143,7 +143,7 @@ const Category = ({  user, setUser }) => {
       }
 
     useEffect(() => { 
-        fetch(`/categories/${id}`)
+        fetch(`/api/categories/${id}`)
         .then(res => res.json())
         .then(category => {
             setCategory(category)

@@ -58,7 +58,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
 
     //CRUD functions
     function handleDeleteCategory(){
-        fetch(`/categories/${category.id}`, {
+        fetch(`/api/categories/${category.id}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" }
         })
@@ -85,7 +85,7 @@ const CategoryCard = ({ category, fromBudget, categories, setCategories, handleD
     }
 
     function patchCategory(){
-        fetch(`/categories/${category.id}`, {
+        fetch(`/api/categories/${category.id}`, {
             method: "PATCH",
             headers: {"Content-Type": 'application/json'},
             body: JSON.stringify(newCategory)

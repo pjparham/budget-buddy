@@ -11,7 +11,12 @@ load_dotenv()
 
 from models import db, User, Budget, Income, Category, Expense
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/build',
+    template_folder='../client/build'
+)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///budget-buddy.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
@@ -122,7 +127,7 @@ class Users(Resource):
             db.session.rollback()
             return make_response(jsonify({'error': 'An error occurred while deleting the user'}), HTTP_SERVER_ERROR)
 
-api.add_resource(Users, '/users', '/users/<int:user_id>')
+api.add_resource(Users, '/api/users', '/api/users/<int:user_id>')
 
 class Budgets(Resource):
     @authorized
@@ -212,7 +217,7 @@ class Budgets(Resource):
             db.session.rollback()
             return make_response(jsonify({'error': 'An error occurred while deleting the budget'}), HTTP_SERVER_ERROR)
         
-api.add_resource(Budgets, '/budgets', '/budgets/<int:budget_id>')
+api.add_resource(Budgets, '/api/budgets', '/api/budgets/<int:budget_id>')
 
 
 class Incomes(Resource):
@@ -269,7 +274,7 @@ class Incomes(Resource):
             db.session.rollback()
             return make_response(jsonify({'error': 'An error occurred while deleting the income'}), HTTP_SERVER_ERROR)
 
-api.add_resource(Incomes, '/incomes', '/incomes/<int:income_id>')
+api.add_resource(Incomes, '/api/incomes', '/api/incomes/<int:income_id>')
 
 class Categories(Resource):
     @authorized
@@ -374,7 +379,7 @@ class Categories(Resource):
             db.session.rollback()
             return make_response(jsonify({'error': 'An error occurred while deleting the income'}), HTTP_SERVER_ERROR)
 
-api.add_resource(Categories, '/categories', '/categories/<int:category_id>')
+api.add_resource(Categories, '/api/categories', '/api/categories/<int:category_id>')
 
 class Expenses(Resource):
     @authorized
@@ -420,7 +425,7 @@ class Expenses(Resource):
             db.session.rollback()
             return make_response(jsonify({'error': 'An error occurred while deleting the expense'}), HTTP_SERVER_ERROR)
 
-api.add_resource(Expenses, '/expenses', '/expenses/<int:expense_id>')
+api.add_resource(Expenses, '/api/expenses', '/api/expenses/<int:expense_id>')
 
 
 class Login(Resource):
@@ -438,14 +443,14 @@ class Login(Resource):
             
         return {'error': 'Invalid Username or Password'}, HTTP_UNAUTHORIZED
 
-api.add_resource(Login, '/login')
+api.add_resource(Login, '/api/login')
 
 class Logout(Resource):
     def delete(self):
         session['user_id'] = None
         return make_response({}, HTTP_NO_CONTENT)
 
-api.add_resource(Logout, '/logout')
+api.add_resource(Logout, '/api/logout')
 
 class CheckSession(Resource):
     def get(self):
@@ -455,7 +460,7 @@ class CheckSession(Resource):
             return make_response(jsonify(user.to_dict()), HTTP_SUCCESS)
         return {'error': '401 Unauthroized'}, HTTP_UNAUTHORIZED
     
-api.add_resource(CheckSession, '/check_session')
+api.add_resource(CheckSession, '/api/check_session')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

@@ -129,7 +129,7 @@ const Budget = ({ setUser, user }) => {
   }
 
     useEffect(() => {
-        fetch(`/budgets/${id}`)
+        fetch(`/api/budgets/${id}`)
         .then(res => res.json())
         .then(setBudget)
     }, [])
@@ -193,7 +193,7 @@ const Budget = ({ setUser, user }) => {
     
     function postCategory(e){
       e.preventDefault()
-      fetch('/categories', {
+      fetch('/api/categories', {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(categoryForm)
@@ -230,7 +230,7 @@ const Budget = ({ setUser, user }) => {
 
     function postIncome(e){
       e.preventDefault()
-      fetch('/incomes', {
+      fetch('/api/incomes', {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(incomeForm)
@@ -265,7 +265,7 @@ const Budget = ({ setUser, user }) => {
 
     function postExpense(e){
       e.preventDefault()
-      fetch('/expenses', {
+      fetch('/api/expenses', {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(expenseForm)

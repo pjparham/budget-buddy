@@ -26,7 +26,7 @@ export default function BudgetTable({ fromBudget, transactions, handleDeleteExpe
   function onDeleteTransaction(transaction){
     //this checks if it's income or expense
     if (transaction.category_id){  //expenses 
-      fetch(`/expenses/${transaction.id}`, 
+      fetch(`/api/expenses/${transaction.id}`, 
       {
         method: "DELETE",
         headers: { "Content-Type": "application/json" }
@@ -53,7 +53,7 @@ export default function BudgetTable({ fromBudget, transactions, handleDeleteExpe
         }
       })
     } else { //incomes
-      fetch(`/incomes/${transaction.id}`, {
+      fetch(`/api/incomes/${transaction.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" }
       })

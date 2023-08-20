@@ -14,7 +14,7 @@ function AnimatedRoutes() {
 useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch("/check_session");
+        const response = await fetch("/api/check_session");
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);

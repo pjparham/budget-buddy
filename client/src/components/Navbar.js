@@ -46,7 +46,7 @@ export default function Nav({ user, setUser }) {
 
   function handleLogout(e){
     e.preventDefault()
-    fetch('logout',{
+    fetch('/api/logout',{
         method: "DELETE"
     }).then(() =>setUser(null))
     navigate('/')

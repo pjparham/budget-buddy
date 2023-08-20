@@ -53,7 +53,7 @@ export default function UserProfileEdit({ user, setUser }) {
 
   function handleUpdateUser(e){
     e.preventDefault()
-    fetch(`/users/${user.id}`, {
+    fetch(`/api/users/${user.id}`, {
       method: "PATCH",
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(userForm)
@@ -81,7 +81,7 @@ export default function UserProfileEdit({ user, setUser }) {
     }
 
   function handleDeleteUser(userId){
-    fetch(`/users/${userId}`, {
+    fetch(`/api/users/${userId}`, {
       method: "DELETE"
     })
     .then(() => {
