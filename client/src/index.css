@@ -95,7 +95,7 @@ ul {
   flex-wrap: wrap;
   -webkit-box-align: start;
   -ms-flex-align: start;
-  align-items: start;
+  align-items: flex-start;
   gap: var(--space-lg);
 }
 
