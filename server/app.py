@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response, session
+from flask import Flask, jsonify, request, make_response, session, render_template
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_restful import Resource, Api
@@ -37,6 +37,10 @@ HTTP_NOT_FOUND = 404
 HTTP_BAD_REQUEST = 400
 HTTP_CONFLICT = 409
 HTTP_SERVER_ERROR = 500
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("index.html")
 
 def authorized(func):
     @wraps(func)
