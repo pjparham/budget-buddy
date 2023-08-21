@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import CategoryCard from './CategoryCard'
 import Navbar from './Navbar'
@@ -7,7 +6,6 @@ import Loading from './Loading'
 import BudgetTable from './BudgetTable'
 import { Heading, 
          Text, 
-         Flex,
          Box,
          Input,
          Card,

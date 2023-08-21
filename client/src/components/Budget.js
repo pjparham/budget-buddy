@@ -24,7 +24,6 @@ import { Heading,
          Alert,
          AlertIcon,
          AlertTitle,
-         AlertDescription,
          useToast } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
 
