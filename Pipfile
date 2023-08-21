@@ -16,6 +16,7 @@ pytest = "7.2.0"
 sqlalchemy-serializer = "1.4.1"
 flask-bcrypt = "1.0.1"
 gunicorn = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
