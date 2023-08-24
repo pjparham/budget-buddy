@@ -37,6 +37,7 @@ const Budget = ({ setUser, user }) => {
   const [incomes, setIncomes] = useState([])
   const [remainingAmount, setRemainingAmount] = useState()
   const [items, setItems] = useState([0, 1, 2]);
+  const [expenses, setExpenses] = useState([])
 
 
   //state for forms
@@ -82,7 +83,7 @@ const Budget = ({ setUser, user }) => {
     }
   }, [categories]);
 
-
+  console.log(budget)
   function handleExpenseFormChange(e){
     setExpenseForm({
       ...expenseForm,
@@ -139,6 +140,7 @@ const Budget = ({ setUser, user }) => {
         updateTransactions()
         updateIncomes()
         setRemainingAmount(budget.remaining_amount)
+        updateExpenses()
       }
     }, [budget]);
 
@@ -149,6 +151,7 @@ const Budget = ({ setUser, user }) => {
     function updateIncomes(){
       setIncomes(budget.incomes)
     }
+    console.log(categories, transactions)
 
     function addCategory(newCategory){
       let allCategories = [...categories, newCategory]
@@ -181,14 +184,24 @@ const Budget = ({ setUser, user }) => {
       if (categories) {
         let allTransactions = [];
         allTransactions.push(budget.incomes);
-    
-        categories.forEach((category) => {
+        budget.categories.forEach((category) => {
           allTransactions.push(category.expenses);
         });
     
         setTransactions(allTransactions.flat());
       }
     }
+
+    function updateExpenses(){
+      if (categories) {
+        let allExpenses = [];
+        categories.forEach((category) => {
+          allExpenses.push(category.expenses)
+        });
+        setExpenses(allExpenses)
+      }
+    }
+    console.log(expenses)
     
     function postCategory(e){
       e.preventDefault()
