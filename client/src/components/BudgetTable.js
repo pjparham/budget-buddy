@@ -13,7 +13,7 @@ import { BsTrash3Fill } from 'react-icons/bs'
 
 export default function BudgetTable({ fromBudget, transactions, handleDeleteExpense, handleDeleteIncome, categories }) {
   const toast = useToast()
-  
+  console.log(transactions)
   const [sortedTransactions, setSortedTransactions] = useState([]);
 
   useEffect(() => {
