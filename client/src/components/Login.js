@@ -118,7 +118,7 @@ export default function Login({handleChange, userForm, setIsLogin, setUser}) {
                     onClick={() => setShow(!show)}>
               {show ? "Hide" : "Show"}
             </Button>
-          </InputRightElement>
+          </InputRightElement> 
         </InputGroup>
       </Stack>
       <Button
